@@ -2,6 +2,8 @@ rootProject.name = "IndianMetro"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
+    includeBuild("build-logic/linting")
+
     repositories {
         google {
             mavenContent {
