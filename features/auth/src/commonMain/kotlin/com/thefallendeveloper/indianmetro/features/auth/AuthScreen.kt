@@ -59,7 +59,7 @@ fun AuthRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel) {
-        viewModel.effects.collectLatest { effect ->
+        viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is PhoneEntryViewModel.Effect.NavigateToOnboarding -> onAuthCompleted(effect.phoneNumber)
             }
