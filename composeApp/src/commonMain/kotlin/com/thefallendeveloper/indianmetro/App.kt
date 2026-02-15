@@ -1,14 +1,13 @@
 package com.thefallendeveloper.indianmetro
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,38 +17,107 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.thefallendeveloper.indianmetro.designsystem.components.GradientPrimaryButton
+import com.thefallendeveloper.indianmetro.designsystem.components.SecondaryButton
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroThemeTokens
-import indianmetro.composeapp.generated.resources.Res
-import indianmetro.composeapp.generated.resources.compose_multiplatform
-import org.jetbrains.compose.resources.painterResource
+import com.thefallendeveloper.indianmetro.features.auth.AuthOtpScreen
+import com.thefallendeveloper.indianmetro.features.auth.AuthPhoneEntryScreen
+import com.thefallendeveloper.indianmetro.features.onboarding.OnboardingScreen
+import com.thefallendeveloper.indianmetro.features.onboarding.OnboardingUiState
 import org.jetbrains.compose.ui.tooling.preview.Preview
+
+private enum class AppStep {
+    PhoneEntry,
+    OtpVerification,
+    PassengerDetails,
+    Done,
+}
 
 @Composable
 @Preview
 fun App() {
+    var step by remember { mutableStateOf(AppStep.PhoneEntry) }
+    var phone by remember { mutableStateOf("") }
+    var otp by remember { mutableStateOf("") }
+    var onboardingState by remember { mutableStateOf(OnboardingUiState()) }
+
+    when (step) {
+        AppStep.PhoneEntry ->
+            AuthPhoneEntryScreen(
+                phoneNumber = phone,
+                onPhoneNumberChanged = { phone = it.filter { ch -> ch.isDigit() }.take(10) },
+                onContinue = { step = AppStep.OtpVerification },
+            )
+
+        AppStep.OtpVerification ->
+            AuthOtpScreen(
+                otp = otp,
+                onOtpChanged = { otp = it },
+                onVerify = { step = AppStep.PassengerDetails },
+                onResend = { otp = "" },
+            )
+
+        AppStep.PassengerDetails ->
+            OnboardingScreen(
+                state = onboardingState,
+                onFirstNameChanged = { onboardingState = onboardingState.copy(firstName = it) },
+                onLastNameChanged = { onboardingState = onboardingState.copy(lastName = it) },
+                onEmailChanged = { onboardingState = onboardingState.copy(email = it) },
+                onCreateAccount = { step = AppStep.Done },
+            )
+
+        AppStep.Done ->
+            SuccessScreen(
+                fullName = "${onboardingState.firstName} ${onboardingState.lastName}".trim(),
+                onRestart = {
+                    phone = ""
+                    otp = ""
+                    onboardingState = OnboardingUiState()
+                    step = AppStep.PhoneEntry
+                },
+            )
+    }
+}
+
+@Composable
+private fun SuccessScreen(
+    fullName: String,
+    onRestart: () -> Unit,
+) {
     IndianMetroTheme {
-        var showContent by remember { mutableStateOf(false) }
+        val spacing = IndianMetroThemeTokens.spacing
         Column(
             modifier =
                 Modifier
-                    .background(MaterialTheme.colorScheme.primaryContainer)
-                    .safeContentPadding()
-                    .padding(IndianMetroThemeTokens.spacing.medium)
-                    .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+                    .safeDrawingPadding()
+                    .padding(spacing.large),
+            verticalArrangement = Arrangement.spacedBy(spacing.medium),
         ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
+            Text(
+                text = "Account Created",
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            Text(
+                text = "Welcome $fullName",
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter,
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(spacing.small)) {
+                    GradientPrimaryButton(
+                        text = "Continue",
+                        onClick = {},
+                    )
+                    SecondaryButton(
+                        text = "Start Over",
+                        onClick = onRestart,
+                    )
                 }
             }
         }

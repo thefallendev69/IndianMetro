@@ -33,6 +33,8 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(projects.designsystem)
+            implementation(projects.features.auth)
+            implementation(projects.features.onboarding)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)

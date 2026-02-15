@@ -33,7 +33,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.thefallendeveloper.indianmetro.features.auth"
+    namespace = "com.thefallendeveloper.indianmetro.features.onboarding"
     compileSdk =
         libs.versions.android.compileSdk
             .get()
