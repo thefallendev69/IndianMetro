@@ -3,53 +3,71 @@ package com.thefallendeveloper.indianmetro.features.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.scan
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class PhoneEntryViewModel : ViewModel() {
 
-    private val _state = MutableStateFlow(State())
-    val state: StateFlow<State> = _state.asStateFlow()
+    private val _events = MutableSharedFlow<Event>()
 
-    private val _effects = MutableSharedFlow<Effect>()
-    val effects: SharedFlow<Effect> = _effects.asSharedFlow()
-
-    fun onEvent(event: Event) {
-        when (event) {
-            is Event.PhoneNumberChanged -> reducePhoneChanged(event.value)
-            Event.ContinueClicked -> handleContinueClicked()
+    val state: StateFlow<State> = events().scanState(initState()) { prevState, event ->
+            when (event) {
+                is Event.PhoneNumberChanged -> reduceStateOnPhoneNumberChanged(prevState, event)
+                Event.ContinueClicked -> reduceStateOnContinueButtonClicked(prevState)
+                is Event.OtpChanged -> reduceStateOnOtpChanged(prevState, event)
+                Event.VerifyClicked -> reduceStateOnVerifyClicked(prevState)
+                Event.ResendClicked -> reduceStateOnResendClicked(prevState)
+            }
         }
-    }
 
-    private fun reducePhoneChanged(input: String) {
-        val phone = input.filter(Char::isDigit).take(MAX_PHONE_LENGTH)
-        _state.update {
-            it.copy(
-                phoneNumber = phone,
-                isContinueEnabled = phone.length == MAX_PHONE_LENGTH,
-            )
-        }
-    }
-
-    private fun handleContinueClicked() {
-        val currentState = _state.value
-        if (!currentState.isContinueEnabled) {
-            return
-        }
+    fun emitEvent(event: Event) {
         viewModelScope.launch {
-            _effects.emit(Effect.NavigateToOtp(phoneNumber = currentState.phoneNumber))
+            _events.emit(event)
         }
     }
+
+    private fun reduceStateOnPhoneNumberChanged(
+        prevState: State,
+        event: Event.PhoneNumberChanged,
+    ): State {
+        val phoneNumber = event.value.filter(Char::isDigit).take(MAX_PHONE_LENGTH)
+        return prevState.copy(phoneNumber = phoneNumber)
+    }
+
+    private fun reduceStateOnContinueButtonClicked(prevState: State): State =
+        if (prevState.continueClickable) {
+            prevState.copy(authStep = AuthStep.OtpEntry)
+        } else {
+            prevState
+        }
+
+    private fun reduceStateOnOtpChanged(
+        prevState: State,
+        event: Event.OtpChanged,
+    ): State {
+        val otp = event.value.filter(Char::isDigit).take(MAX_OTP_LENGTH)
+        return prevState.copy(otp = otp)
+    }
+
+    private fun reduceStateOnVerifyClicked(prevState: State): State = prevState
+
+    private fun reduceStateOnResendClicked(prevState: State): State = prevState.copy(otp = "")
 
     data class State(
-        val phoneNumber: String = "",
-        val isContinueEnabled: Boolean = false,
-    )
+        val phoneNumber: String,
+        val otp: String,
+        val authStep: AuthStep,
+    ) {
+        val continueClickable: Boolean
+            get() = phoneNumber.length == MAX_PHONE_LENGTH
+
+        val verifyClickable: Boolean
+            get() = otp.length == MAX_OTP_LENGTH
+    }
 
     sealed class Event {
         data class PhoneNumberChanged(
@@ -57,15 +75,48 @@ class PhoneEntryViewModel : ViewModel() {
         ) : Event()
 
         data object ContinueClicked : Event()
+
+        data class OtpChanged(
+            val value: String,
+        ) : Event()
+
+        data object VerifyClicked : Event()
+
+        data object ResendClicked : Event()
     }
 
     sealed class Effect {
-        data class NavigateToOtp(
+        data class NavigateToOnboarding(
             val phoneNumber: String,
         ) : Effect()
     }
 
+    enum class AuthStep {
+        PhoneEntry,
+        OtpEntry,
+    }
+
+    private fun initState(): State =
+        State(
+            phoneNumber = "",
+            otp = "",
+            authStep = AuthStep.PhoneEntry,
+        )
+
+    private fun events() = _events
+
+    private fun SharedFlow<Event>.scanState(
+        initialState: State,
+        reducer: (State, Event) -> State,
+    ): StateFlow<State> =
+        scan(initialState, reducer).stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = initialState,
+        )
+
     private companion object {
         const val MAX_PHONE_LENGTH = 10
+        const val MAX_OTP_LENGTH = 6
     }
 }

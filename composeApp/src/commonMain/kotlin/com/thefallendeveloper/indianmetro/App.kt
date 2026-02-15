@@ -21,8 +21,7 @@ import com.thefallendeveloper.indianmetro.designsystem.components.GradientPrimar
 import com.thefallendeveloper.indianmetro.designsystem.components.SecondaryButton
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroThemeTokens
-import com.thefallendeveloper.indianmetro.features.auth.AuthOtpScreen
-import com.thefallendeveloper.indianmetro.features.auth.AuthPhoneEntryRoute
+import com.thefallendeveloper.indianmetro.features.auth.AuthRoute
 import com.thefallendeveloper.indianmetro.features.onboarding.OnboardingScreen
 import com.thefallendeveloper.indianmetro.features.onboarding.OnboardingUiState
 import indianmetro.composeapp.generated.resources.Res
@@ -34,8 +33,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private enum class AppStep {
-    PhoneEntry,
-    OtpVerification,
+    Auth,
     PassengerDetails,
     Done,
 }
@@ -43,26 +41,19 @@ private enum class AppStep {
 @Composable
 @Preview
 fun App() {
-    var step by remember { mutableStateOf(AppStep.PhoneEntry) }
+    var step by remember { mutableStateOf(AppStep.Auth) }
+    var authSession by remember { mutableStateOf(0) }
     var phone by remember { mutableStateOf("") }
-    var otp by remember { mutableStateOf("") }
     var onboardingState by remember { mutableStateOf(OnboardingUiState()) }
 
     when (step) {
-        AppStep.PhoneEntry ->
-            AuthPhoneEntryRoute(
-                onNavigateToOtp = { enteredPhone ->
+        AppStep.Auth ->
+            AuthRoute(
+                viewModelKey = "auth-route-$authSession",
+                onAuthCompleted = { enteredPhone ->
                     phone = enteredPhone
-                    step = AppStep.OtpVerification
+                    step = AppStep.PassengerDetails
                 },
-            )
-
-        AppStep.OtpVerification ->
-            AuthOtpScreen(
-                otp = otp,
-                onOtpChanged = { otp = it },
-                onVerify = { step = AppStep.PassengerDetails },
-                onResend = { otp = "" },
             )
 
         AppStep.PassengerDetails ->
@@ -79,9 +70,9 @@ fun App() {
                 fullName = "${onboardingState.firstName} ${onboardingState.lastName}".trim(),
                 onRestart = {
                     phone = ""
-                    otp = ""
+                    authSession++
                     onboardingState = OnboardingUiState()
-                    step = AppStep.PhoneEntry
+                    step = AppStep.Auth
                 },
             )
     }

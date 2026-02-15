@@ -21,7 +21,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.thefallendeveloper.indianmetro.designsystem.components.GradientPrimaryButton
 import com.thefallendeveloper.indianmetro.designsystem.components.MetroLabeledPhoneInputField
@@ -51,29 +51,47 @@ import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AuthPhoneEntryRoute(
-    onNavigateToOtp: (String) -> Unit,
-    viewModel: PhoneEntryViewModel = viewModel { PhoneEntryViewModel() },
+fun AuthRoute(
+    onAuthCompleted: (String) -> Unit,
+    viewModelKey: String = "auth-view-model",
+    viewModel: PhoneEntryViewModel = viewModel(key = viewModelKey) { PhoneEntryViewModel() },
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel) {
         viewModel.effects.collectLatest { effect ->
             when (effect) {
-                is PhoneEntryViewModel.Effect.NavigateToOtp -> onNavigateToOtp(effect.phoneNumber)
+                is PhoneEntryViewModel.Effect.NavigateToOnboarding -> onAuthCompleted(effect.phoneNumber)
             }
         }
     }
 
-    AuthPhoneEntryScreen(
-        phoneNumber = state.phoneNumber,
-        onPhoneNumberChanged = { value ->
-            viewModel.onEvent(PhoneEntryViewModel.Event.PhoneNumberChanged(value))
-        },
-        onContinue = {
-            viewModel.onEvent(PhoneEntryViewModel.Event.ContinueClicked)
-        },
-    )
+    when (state.authStep) {
+        PhoneEntryViewModel.AuthStep.PhoneEntry ->
+            AuthPhoneEntryScreen(
+                phoneNumber = state.phoneNumber,
+                onPhoneNumberChanged = { value ->
+                    viewModel.emitEvent(PhoneEntryViewModel.Event.PhoneNumberChanged(value))
+                },
+                onContinue = {
+                    viewModel.emitEvent(PhoneEntryViewModel.Event.ContinueClicked)
+                },
+            )
+
+        PhoneEntryViewModel.AuthStep.OtpEntry ->
+            AuthOtpScreen(
+                otp = state.otp,
+                onOtpChanged = { value ->
+                    viewModel.emitEvent(PhoneEntryViewModel.Event.OtpChanged(value))
+                },
+                onVerify = {
+                    viewModel.emitEvent(PhoneEntryViewModel.Event.VerifyClicked)
+                },
+                onResend = {
+                    viewModel.emitEvent(PhoneEntryViewModel.Event.ResendClicked)
+                },
+            )
+    }
 }
 
 @Composable

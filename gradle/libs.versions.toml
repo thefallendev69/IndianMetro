@@ -16,6 +16,7 @@ kotlinStdlib = "2.2.20"
 runner = "1.5.2"
 core = "1.5.0"
 koin = "4.1.1"
+coroutines = "1.10.2"
 ktlint = "14.0.1"
 detekt = "1.23.8"
 
@@ -37,6 +38,7 @@ io-koin-common = { group = "io.insert-koin", name = "koin-core", version.ref = "
 io-koin-compose = { group = "io.insert-koin", name = "koin-compose", version.ref = "koin" }
 io-koin-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }
 io-koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
