@@ -24,5 +24,9 @@ gradlePlugin {
             id = "com.thefallendeveloper.indianmetro.lint-conventions"
             implementationClass = "com.thefallendeveloper.indianmetro.linting.LintConventionsPlugin"
         }
+        register("indianmetroLintSuite") {
+            id = "com.thefallendeveloper.indianmetro.lint-suite"
+            implementationClass = "com.thefallendeveloper.indianmetro.linting.LintSuitePlugin"
+        }
     }
 }

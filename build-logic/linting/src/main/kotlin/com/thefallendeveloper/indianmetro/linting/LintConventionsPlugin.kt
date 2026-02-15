@@ -25,6 +25,10 @@ class LintConventionsPlugin : Plugin<Project> {
         target.extensions.configure(DetektExtension::class.java) {
             buildUponDefaultConfig = true
             allRules = false
+            val detektConfigFile = target.rootProject.file("config/detekt/detekt.yml")
+            if (detektConfigFile.exists()) {
+                config.setFrom(detektConfigFile)
+            }
         }
 
         target.tasks.withType(Detekt::class.java).configureEach {

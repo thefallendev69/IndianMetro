@@ -1,0 +1,14 @@
+style:
+  MagicNumber:
+    active: false
+  NewLineAtEndOfFile:
+    active: false
+
+naming:
+  FunctionNaming:
+    excludes:
+      - '**/MainViewController.kt'
+    ignoreAnnotated:
+      - Composable
+  MatchingDeclarationName:
+    active: false
