@@ -20,12 +20,16 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.thefallendeveloper.indianmetro.designsystem.components.GradientPrimaryButton
 import com.thefallendeveloper.indianmetro.designsystem.components.MetroLabeledPhoneInputField
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
@@ -43,7 +47,34 @@ import indianmetro.features.auth.generated.resources.auth_sign_in_title
 import indianmetro.features.auth.generated.resources.auth_verify_otp
 import indianmetro.features.auth.generated.resources.auth_verify_otp_subtitle
 import indianmetro.features.auth.generated.resources.auth_verify_otp_title
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
+
+@Composable
+fun AuthPhoneEntryRoute(
+    onNavigateToOtp: (String) -> Unit,
+    viewModel: PhoneEntryViewModel = viewModel { PhoneEntryViewModel() },
+) {
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(viewModel) {
+        viewModel.effects.collectLatest { effect ->
+            when (effect) {
+                is PhoneEntryViewModel.Effect.NavigateToOtp -> onNavigateToOtp(effect.phoneNumber)
+            }
+        }
+    }
+
+    AuthPhoneEntryScreen(
+        phoneNumber = state.phoneNumber,
+        onPhoneNumberChanged = { value ->
+            viewModel.onEvent(PhoneEntryViewModel.Event.PhoneNumberChanged(value))
+        },
+        onContinue = {
+            viewModel.onEvent(PhoneEntryViewModel.Event.ContinueClicked)
+        },
+    )
+}
 
 @Composable
 fun AuthPhoneEntryScreen(

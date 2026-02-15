@@ -22,7 +22,7 @@ import com.thefallendeveloper.indianmetro.designsystem.components.SecondaryButto
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroThemeTokens
 import com.thefallendeveloper.indianmetro.features.auth.AuthOtpScreen
-import com.thefallendeveloper.indianmetro.features.auth.AuthPhoneEntryScreen
+import com.thefallendeveloper.indianmetro.features.auth.AuthPhoneEntryRoute
 import com.thefallendeveloper.indianmetro.features.onboarding.OnboardingScreen
 import com.thefallendeveloper.indianmetro.features.onboarding.OnboardingUiState
 import indianmetro.composeapp.generated.resources.Res
@@ -50,10 +50,11 @@ fun App() {
 
     when (step) {
         AppStep.PhoneEntry ->
-            AuthPhoneEntryScreen(
-                phoneNumber = phone,
-                onPhoneNumberChanged = { phone = it.filter { ch -> ch.isDigit() }.take(10) },
-                onContinue = { step = AppStep.OtpVerification },
+            AuthPhoneEntryRoute(
+                onNavigateToOtp = { enteredPhone ->
+                    phone = enteredPhone
+                    step = AppStep.OtpVerification
+                },
             )
 
         AppStep.OtpVerification ->
