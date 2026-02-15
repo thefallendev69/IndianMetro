@@ -1,0 +1,90 @@
+{
+  "name": "Metro UI Design System",
+  "version": "1.0.0",
+  "tokens": {
+    "color": {
+      "brand": {
+        "primary": {
+          "start": { "value": "#F97316", "type": "color", "comment": "Orange 500" },
+          "end": { "value": "#E11D48", "type": "color", "comment": "Rose 600" }
+        }
+      },
+      "metro_lines": {
+        "red": { "value": "#E11D48", "type": "color", "comment": "Rose 600" },
+        "yellow": { "value": "#FBBF24", "type": "color", "comment": "Amber 400" },
+        "blue": { "value": "#0EA5E9", "type": "color", "comment": "Sky 500" },
+        "green": { "value": "#10B981", "type": "color", "comment": "Emerald 500" }
+      },
+      "neutral": {
+        "slate_50": { "value": "#F8FAFC", "type": "color", "comment": "Light Background" },
+        "slate_200": { "value": "#E2E8F0", "type": "color", "comment": "Light Borders" },
+        "slate_400": { "value": "#94A3B8", "type": "color", "comment": "Dark Secondary Text" },
+        "slate_500": { "value": "#64748B", "type": "color", "comment": "Light Secondary Text" },
+        "slate_700": { "value": "#334155", "type": "color", "comment": "Dark Borders" },
+        "slate_900": { "value": "#0F172A", "type": "color", "comment": "Light Primary Text" },
+        "slate_950": { "value": "#020617", "type": "color", "comment": "Dark Background" },
+        "white": { "value": "#FFFFFF", "type": "color" }
+      },
+      "semantic": {
+        "background": {
+          "light": { "value": "{color.neutral.slate_50.value}", "type": "color" },
+          "dark": { "value": "{color.neutral.slate_950.value}", "type": "color" }
+        },
+        "surface": {
+          "light": { "value": "{color.neutral.white.value}", "type": "color" },
+          "dark": { "value": "#1E293B", "type": "color", "comment": "Slate 800" }
+        },
+        "text": {
+          "primary": {
+            "light": { "value": "{color.neutral.slate_900.value}", "type": "color" },
+            "dark": { "value": "{color.neutral.white.value}", "type": "color" }
+          },
+          "secondary": {
+            "light": { "value": "{color.neutral.slate_500.value}", "type": "color" },
+            "dark": { "value": "{color.neutral.slate_400.value}", "type": "color" }
+          }
+        },
+        "border": {
+          "default": {
+            "light": { "value": "{color.neutral.slate_200.value}", "type": "color" },
+            "dark": { "value": "{color.neutral.slate_700.value}", "type": "color" }
+          }
+        }
+      }
+    },
+    "typography": {
+      "h1": {
+        "fontSize": { "value": "30px", "type": "dimension" },
+        "fontWeight": { "value": "800", "type": "fontWeight", "comment": "ExtraBold" },
+        "letterSpacing": { "value": "-0.025em", "type": "dimension", "comment": "Tight" }
+      },
+      "h2": {
+        "fontSize": { "value": "24px", "type": "dimension" },
+        "fontWeight": { "value": "700", "type": "fontWeight", "comment": "Bold" }
+      },
+      "h3": {
+        "fontSize": { "value": "20px", "type": "dimension" },
+        "fontWeight": { "value": "600", "type": "fontWeight", "comment": "SemiBold" }
+      },
+      "body": {
+        "fontSize": { "value": "16px", "type": "dimension" },
+        "fontWeight": { "value": "400", "type": "fontWeight", "comment": "Regular" }
+      },
+      "label": {
+        "fontSize": { "value": "11px", "type": "dimension" },
+        "fontWeight": { "value": "700", "type": "fontWeight", "comment": "Bold" },
+        "letterSpacing": { "value": "0.05em", "type": "dimension", "comment": "Wider" },
+        "textTransform": { "value": "uppercase", "type": "string" }
+      }
+    },
+    "shape": {
+      "borderRadius": {
+        "xl": { "value": "12px", "type": "dimension" },
+        "full": { "value": "9999px", "type": "dimension" }
+      },
+      "borderWidth": {
+        "default": { "value": "2px", "type": "dimension" }
+      }
+    }
+  }
+}
