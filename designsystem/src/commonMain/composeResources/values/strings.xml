@@ -1,0 +1,8 @@
+<resources>
+    <string name="preview_button_continue">Continue</string>
+    <string name="preview_button_skip">Skip</string>
+    <string name="preview_email_label">Email</string>
+    <string name="preview_email_placeholder">you@example.com</string>
+    <string name="preview_password_label">Password</string>
+    <string name="preview_password_placeholder">••••••••</string>
+</resources>

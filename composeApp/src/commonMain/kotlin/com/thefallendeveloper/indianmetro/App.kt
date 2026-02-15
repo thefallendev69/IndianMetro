@@ -25,6 +25,12 @@ import com.thefallendeveloper.indianmetro.features.auth.AuthOtpScreen
 import com.thefallendeveloper.indianmetro.features.auth.AuthPhoneEntryScreen
 import com.thefallendeveloper.indianmetro.features.onboarding.OnboardingScreen
 import com.thefallendeveloper.indianmetro.features.onboarding.OnboardingUiState
+import indianmetro.composeapp.generated.resources.Res
+import indianmetro.composeapp.generated.resources.app_account_created
+import indianmetro.composeapp.generated.resources.app_continue
+import indianmetro.composeapp.generated.resources.app_start_over
+import indianmetro.composeapp.generated.resources.app_welcome_user
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private enum class AppStep {
@@ -97,12 +103,12 @@ private fun SuccessScreen(
             verticalArrangement = Arrangement.spacedBy(spacing.medium),
         ) {
             Text(
-                text = "Account Created",
+                text = stringResource(Res.string.app_account_created),
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier.fillMaxWidth(),
             )
             Text(
-                text = "Welcome $fullName",
+                text = stringResource(Res.string.app_welcome_user, fullName),
                 style = MaterialTheme.typography.bodyLarge,
             )
             Box(
@@ -111,11 +117,11 @@ private fun SuccessScreen(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(spacing.small)) {
                     GradientPrimaryButton(
-                        text = "Continue",
+                        text = stringResource(Res.string.app_continue),
                         onClick = {},
                     )
                     SecondaryButton(
-                        text = "Start Over",
+                        text = stringResource(Res.string.app_start_over),
                         onClick = onRestart,
                     )
                 }

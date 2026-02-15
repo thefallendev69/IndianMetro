@@ -1,0 +1,11 @@
+<resources>
+    <string name="onboarding_first_name_label">FIRST NAME</string>
+    <string name="onboarding_first_name_placeholder">Amit</string>
+    <string name="onboarding_last_name_label">LAST NAME</string>
+    <string name="onboarding_last_name_placeholder">Verma</string>
+    <string name="onboarding_email_label">EMAIL (OPTIONAL)</string>
+    <string name="onboarding_email_placeholder">rahul.sharma@email.com</string>
+    <string name="onboarding_create_account">Create Account</string>
+    <string name="onboarding_title">Passenger Details</string>
+    <string name="onboarding_subtitle">Let&apos;s create your metro pass.</string>
+</resources>

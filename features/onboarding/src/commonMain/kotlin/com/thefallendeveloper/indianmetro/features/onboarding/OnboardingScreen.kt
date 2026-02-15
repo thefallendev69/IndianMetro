@@ -25,6 +25,17 @@ import com.thefallendeveloper.indianmetro.designsystem.components.MetroLabeledIn
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroThemeTokens
 import com.thefallendeveloper.indianmetro.designsystem.tokens.ColorTokens
+import indianmetro.features.onboarding.generated.resources.Res
+import indianmetro.features.onboarding.generated.resources.onboarding_create_account
+import indianmetro.features.onboarding.generated.resources.onboarding_email_label
+import indianmetro.features.onboarding.generated.resources.onboarding_email_placeholder
+import indianmetro.features.onboarding.generated.resources.onboarding_first_name_label
+import indianmetro.features.onboarding.generated.resources.onboarding_first_name_placeholder
+import indianmetro.features.onboarding.generated.resources.onboarding_last_name_label
+import indianmetro.features.onboarding.generated.resources.onboarding_last_name_placeholder
+import indianmetro.features.onboarding.generated.resources.onboarding_subtitle
+import indianmetro.features.onboarding.generated.resources.onboarding_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun OnboardingScreen(
@@ -56,26 +67,26 @@ fun OnboardingScreen(
 
                 Row(horizontalArrangement = Arrangement.spacedBy(spacing.small)) {
                     MetroLabeledInputField(
-                        label = "FIRST NAME",
+                        label = stringResource(Res.string.onboarding_first_name_label),
                         value = state.firstName,
                         onValueChange = onFirstNameChanged,
-                        placeholder = "Amit",
+                        placeholder = stringResource(Res.string.onboarding_first_name_placeholder),
                         modifier = Modifier.weight(1f),
                     )
                     MetroLabeledInputField(
-                        label = "LAST NAME",
+                        label = stringResource(Res.string.onboarding_last_name_label),
                         value = state.lastName,
                         onValueChange = onLastNameChanged,
-                        placeholder = "Verma",
+                        placeholder = stringResource(Res.string.onboarding_last_name_placeholder),
                         modifier = Modifier.weight(1f),
                     )
                 }
 
                 MetroLabeledInputField(
-                    label = "EMAIL (OPTIONAL)",
+                    label = stringResource(Res.string.onboarding_email_label),
                     value = state.email,
                     onValueChange = onEmailChanged,
-                    placeholder = "rahul.sharma@email.com",
+                    placeholder = stringResource(Res.string.onboarding_email_placeholder),
                     modifier = Modifier.padding(top = spacing.small),
                 )
 
@@ -84,7 +95,7 @@ fun OnboardingScreen(
                     contentAlignment = Alignment.BottomCenter,
                 ) {
                     GradientPrimaryButton(
-                        text = "Create Account",
+                        text = stringResource(Res.string.onboarding_create_account),
                         onClick = onCreateAccount,
                         enabled = state.firstName.isNotBlank() && state.lastName.isNotBlank(),
                         modifier = Modifier.padding(bottom = spacing.medium),
@@ -136,11 +147,11 @@ private fun ProfileIcon() {
 @Composable
 private fun HeaderSection() {
     Text(
-        text = "Passenger Details",
+        text = stringResource(Res.string.onboarding_title),
         style = MaterialTheme.typography.headlineLarge,
     )
     Text(
-        text = "Let's create your metro pass.",
+        text = stringResource(Res.string.onboarding_subtitle),
         style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         modifier = Modifier.padding(top = 4.dp, bottom = 16.dp),

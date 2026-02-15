@@ -11,6 +11,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
+import indianmetro.designsystem.generated.resources.Res
+import indianmetro.designsystem.generated.resources.preview_button_continue
+import indianmetro.designsystem.generated.resources.preview_button_skip
+import indianmetro.designsystem.generated.resources.preview_email_label
+import indianmetro.designsystem.generated.resources.preview_email_placeholder
+import indianmetro.designsystem.generated.resources.preview_password_label
+import indianmetro.designsystem.generated.resources.preview_password_placeholder
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Suppress("UnusedPrivateMember")
@@ -22,8 +30,8 @@ fun ButtonsPreview() {
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.padding(16.dp),
         ) {
-            PrimaryButton(text = "Continue", onClick = {})
-            SecondaryButton(text = "Skip", onClick = {})
+            PrimaryButton(text = stringResource(Res.string.preview_button_continue), onClick = {})
+            SecondaryButton(text = stringResource(Res.string.preview_button_skip), onClick = {})
         }
     }
 }
@@ -43,14 +51,14 @@ private fun InputFieldsPreview() {
             InputField(
                 value = email,
                 onValueChange = { email = it },
-                label = "Email",
-                placeholder = "you@example.com",
+                label = stringResource(Res.string.preview_email_label),
+                placeholder = stringResource(Res.string.preview_email_placeholder),
             )
             PasswordInputField(
                 value = password,
                 onValueChange = { password = it },
-                label = "Password",
-                placeholder = "••••••••",
+                label = stringResource(Res.string.preview_password_label),
+                placeholder = stringResource(Res.string.preview_password_placeholder),
             )
         }
     }

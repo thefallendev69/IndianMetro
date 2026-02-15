@@ -31,6 +31,19 @@ import com.thefallendeveloper.indianmetro.designsystem.components.MetroLabeledPh
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroThemeTokens
 import com.thefallendeveloper.indianmetro.designsystem.tokens.ColorTokens
+import indianmetro.features.auth.generated.resources.Res
+import indianmetro.features.auth.generated.resources.auth_mobile_number_label
+import indianmetro.features.auth.generated.resources.auth_otp_code_label
+import indianmetro.features.auth.generated.resources.auth_otp_placeholder
+import indianmetro.features.auth.generated.resources.auth_phone_placeholder
+import indianmetro.features.auth.generated.resources.auth_resend_otp
+import indianmetro.features.auth.generated.resources.auth_send_otp
+import indianmetro.features.auth.generated.resources.auth_sign_in_subtitle
+import indianmetro.features.auth.generated.resources.auth_sign_in_title
+import indianmetro.features.auth.generated.resources.auth_verify_otp
+import indianmetro.features.auth.generated.resources.auth_verify_otp_subtitle
+import indianmetro.features.auth.generated.resources.auth_verify_otp_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AuthPhoneEntryScreen(
@@ -49,21 +62,21 @@ fun AuthPhoneEntryScreen(
                     .padding(spacing.medium),
         ) {
             ScreenPreamble(
-                title = "Sign In",
-                subtitle = "Enter your mobile number to receive an OTP.",
+                title = stringResource(Res.string.auth_sign_in_title),
+                subtitle = stringResource(Res.string.auth_sign_in_subtitle),
             )
 
             MetroLabeledPhoneInputField(
-                label = "MOBILE NUMBER",
+                label = stringResource(Res.string.auth_mobile_number_label),
                 value = phoneNumber,
                 onValueChange = onPhoneNumberChanged,
-                placeholder = "9876543210",
+                placeholder = stringResource(Res.string.auth_phone_placeholder),
                 modifier = Modifier.padding(top = spacing.small),
             )
 
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
                 GradientPrimaryButton(
-                    text = "Send OTP",
+                    text = stringResource(Res.string.auth_send_otp),
                     onClick = onContinue,
                     enabled = phoneNumber.length >= 10,
                     modifier = Modifier.padding(bottom = spacing.medium),
@@ -91,8 +104,8 @@ fun AuthOtpScreen(
                     .padding(spacing.medium),
         ) {
             ScreenPreamble(
-                title = "Verify OTP",
-                subtitle = "Enter the 6-digit code sent to your number.",
+                title = stringResource(Res.string.auth_verify_otp_title),
+                subtitle = stringResource(Res.string.auth_verify_otp_subtitle),
             )
 
             OtpCodeField(otp = otp, onOtpChanged = onOtpChanged)
@@ -106,7 +119,7 @@ fun AuthOtpScreen(
 
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
                 GradientPrimaryButton(
-                    text = "Verify OTP",
+                    text = stringResource(Res.string.auth_verify_otp),
                     onClick = onVerify,
                     enabled = otp.length == 6,
                     modifier = Modifier.padding(bottom = spacing.medium),
@@ -122,7 +135,7 @@ private fun OtpCodeField(
     onOtpChanged: (String) -> Unit,
 ) {
     Text(
-        text = "OTP CODE",
+        text = stringResource(Res.string.auth_otp_code_label),
         style = MaterialTheme.typography.labelLarge,
         modifier = Modifier.padding(bottom = 6.dp),
     )
@@ -134,7 +147,13 @@ private fun OtpCodeField(
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
         shape = RoundedCornerShape(12.dp),
-        placeholder = { Text("------", textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()) },
+        placeholder = {
+            Text(
+                stringResource(Res.string.auth_otp_placeholder),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
         colors =
             OutlinedTextFieldDefaults.colors(
@@ -150,7 +169,7 @@ private fun ResendOtpButton(
     modifier: Modifier = Modifier,
 ) {
     Text(
-        text = "Resend OTP",
+        text = stringResource(Res.string.auth_resend_otp),
         color = ColorTokens.Brand.primaryEnd,
         style = MaterialTheme.typography.bodyLarge,
         modifier =

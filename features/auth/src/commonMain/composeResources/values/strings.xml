@@ -1,0 +1,13 @@
+<resources>
+    <string name="auth_sign_in_title">Sign In</string>
+    <string name="auth_sign_in_subtitle">Enter your mobile number to receive an OTP.</string>
+    <string name="auth_mobile_number_label">MOBILE NUMBER</string>
+    <string name="auth_phone_placeholder">9876543210</string>
+    <string name="auth_send_otp">Send OTP</string>
+    <string name="auth_verify_otp_title">Verify OTP</string>
+    <string name="auth_verify_otp_subtitle">Enter the 6-digit code sent to your number.</string>
+    <string name="auth_verify_otp">Verify OTP</string>
+    <string name="auth_otp_code_label">OTP CODE</string>
+    <string name="auth_otp_placeholder">------</string>
+    <string name="auth_resend_otp">Resend OTP</string>
+</resources>
