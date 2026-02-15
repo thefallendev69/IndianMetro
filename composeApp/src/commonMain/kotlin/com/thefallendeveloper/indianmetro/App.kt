@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
+import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroThemeTokens
 import indianmetro.composeapp.generated.resources.Res
 import indianmetro.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
@@ -25,13 +28,14 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
+    IndianMetroTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(
             modifier =
                 Modifier
                     .background(MaterialTheme.colorScheme.primaryContainer)
                     .safeContentPadding()
+                    .padding(IndianMetroThemeTokens.spacing.medium)
                     .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

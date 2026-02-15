@@ -38,6 +38,7 @@ kotlin {
             implementation(libs.io.koin.android)
         }
         commonMain.dependencies {
+            implementation(projects.designsystem)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
