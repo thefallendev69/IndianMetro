@@ -30,7 +30,7 @@ class LintConventionsPlugin : Plugin<Project> {
         target.tasks.withType(Detekt::class.java).configureEach {
             setSource(target.files("src/commonMain/kotlin", "src/androidMain/kotlin", "src/iosMain/kotlin"))
             include("**/*.kt", "**/*.kts")
-            exclude("**/build/**", "**/generated/**")
+            exclude("**/build/**", "**/generated/**", "**/*.android.kt", "**/*.ios.kt")
         }
     }
 

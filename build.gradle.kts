@@ -7,11 +7,3 @@ plugins {
     alias(libs.plugins.androidKotlinMultiplatformLibrary) apply false
     alias(libs.plugins.detekt) apply false
 }
-
-// 2. Add the plugin dependency to the root project's *buildscript* classpath
-buildscript {
-    repositories {
-        mavenCentral()
-        google()
-    }
-}
