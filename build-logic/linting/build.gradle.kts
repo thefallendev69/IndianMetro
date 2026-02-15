@@ -1,3 +1,5 @@
+import org.gradle.api.artifacts.VersionCatalogsExtension
+
 plugins {
     `kotlin-dsl`
     `java-gradle-plugin`
@@ -9,9 +11,11 @@ repositories {
     google()
 }
 
+val libsCatalog = extensions.getByType(VersionCatalogsExtension::class.java).named("libs")
+
 dependencies {
-    implementation("org.jlleitschuh.gradle:ktlint-gradle:14.0.1")
-    implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.8")
+    implementation(libsCatalog.findLibrary("ktlintGradlePlugin").get())
+    implementation(libsCatalog.findLibrary("detektGradlePlugin").get())
 }
 
 gradlePlugin {
