@@ -1,29 +1,32 @@
 root = true
 
-[*.{kt,kts}]
-indent_size=4
-insert_final_newline=true
-max_line_length=120
+[*]
+insert_final_newline = true
 
-# disable rules globally if needed
+[*.kt]
+# Ignores the 'standard:function-naming' rule for functions annotated with @Composable
+ktlint_function_naming_ignore_when_annotated_with = Composable
+
 [*.{kt,kts}]
-ktlint_standard_final-newline=disabled
-ktlint_standard_function-naming=disabled
-ktlint_standard_import-ordering=disabled
-ktlint_standard_multiline-expression-wrapping=disabled
-ktlint_standard_string-template-indent=disabled
-# ignore generated sources and build outputs
+indent_size = 4
+max_line_length = 120
+ktlint_rule_sets = standard
+# Disable the rule for trailing commas on the call site (e.g., function calls, constructors)
+ktlint_standard_trailing-comma-on-call-site = disabled
+# Disable the rule for trailing commas on the declaration site (e.g., class/function declarations)
+ktlint_standard_trailing-comma-on-declaration-site = disabled
+ktlint_standard_no-unused-imports = enabled
+ktlint_standard_indent = enabled
+ktlint_standard_spacing-around-colon = enabled
+ktlint_standard_final-newline = disabled
+
+
+[composeApp/src/iosMain/kotlin/com/thefallendeveloper/indianmetro/MainViewController.kt]
+ktlint_standard_function-naming = disabled
+
+
 [**/build/**]
-ktlint_disabled=true
+ktlint = disabled
 
 [**/generated/**]
-ktlint_disabled=true
-
-[**/composeApp/build/**]
-ktlint_disabled=true
-
-[**/androidTest/**]
-ktlint_disabled=true
-
-[**/test/**]
-ktlint_disabled=true
+ktlint = disabled
