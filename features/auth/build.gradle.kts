@@ -30,6 +30,9 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
+            implementation(libs.io.koin.common)
+            implementation(libs.io.koin.compose)
+            implementation(libs.io.koin.viewmodel)
             implementation(libs.kotlinx.coroutines.core)
         }
     }

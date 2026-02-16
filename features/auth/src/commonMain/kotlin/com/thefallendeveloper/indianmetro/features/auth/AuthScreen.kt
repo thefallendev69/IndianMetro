@@ -29,7 +29,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.thefallendeveloper.indianmetro.designsystem.components.GradientPrimaryButton
 import com.thefallendeveloper.indianmetro.designsystem.components.MetroLabeledPhoneInputField
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
@@ -49,12 +48,13 @@ import indianmetro.features.auth.generated.resources.auth_verify_otp_subtitle
 import indianmetro.features.auth.generated.resources.auth_verify_otp_title
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AuthRoute(
     onAuthCompleted: (String) -> Unit,
     viewModelKey: String = "auth-view-model",
-    viewModel: PhoneEntryViewModel = viewModel(key = viewModelKey) { PhoneEntryViewModel() },
+    viewModel: PhoneEntryViewModel = koinViewModel(key = viewModelKey),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 

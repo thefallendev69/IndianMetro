@@ -22,6 +22,7 @@ import com.thefallendeveloper.indianmetro.designsystem.components.SecondaryButto
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroThemeTokens
 import com.thefallendeveloper.indianmetro.features.auth.AuthRoute
+import com.thefallendeveloper.indianmetro.features.auth.authModule
 import com.thefallendeveloper.indianmetro.features.onboarding.OnboardingScreen
 import com.thefallendeveloper.indianmetro.features.onboarding.OnboardingUiState
 import indianmetro.composeapp.generated.resources.Res
@@ -31,6 +32,7 @@ import indianmetro.composeapp.generated.resources.app_start_over
 import indianmetro.composeapp.generated.resources.app_welcome_user
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.KoinApplication
 
 private enum class AppStep {
     Auth,
@@ -41,40 +43,42 @@ private enum class AppStep {
 @Composable
 @Preview
 fun App() {
-    var step by remember { mutableStateOf(AppStep.Auth) }
-    var authSession by remember { mutableStateOf(0) }
-    var phone by remember { mutableStateOf("") }
-    var onboardingState by remember { mutableStateOf(OnboardingUiState()) }
+    KoinApplication(application = { modules(authModule) }) {
+        var step by remember { mutableStateOf(AppStep.Auth) }
+        var authSession by remember { mutableStateOf(0) }
+        var phone by remember { mutableStateOf("") }
+        var onboardingState by remember { mutableStateOf(OnboardingUiState()) }
 
-    when (step) {
-        AppStep.Auth ->
-            AuthRoute(
-                viewModelKey = "auth-route-$authSession",
-                onAuthCompleted = { enteredPhone ->
-                    phone = enteredPhone
-                    step = AppStep.PassengerDetails
-                },
-            )
+        when (step) {
+            AppStep.Auth ->
+                AuthRoute(
+                    viewModelKey = "auth-route-$authSession",
+                    onAuthCompleted = { enteredPhone ->
+                        phone = enteredPhone
+                        step = AppStep.PassengerDetails
+                    },
+                )
 
-        AppStep.PassengerDetails ->
-            OnboardingScreen(
-                state = onboardingState,
-                onFirstNameChanged = { onboardingState = onboardingState.copy(firstName = it) },
-                onLastNameChanged = { onboardingState = onboardingState.copy(lastName = it) },
-                onEmailChanged = { onboardingState = onboardingState.copy(email = it) },
-                onCreateAccount = { step = AppStep.Done },
-            )
+            AppStep.PassengerDetails ->
+                OnboardingScreen(
+                    state = onboardingState,
+                    onFirstNameChanged = { onboardingState = onboardingState.copy(firstName = it) },
+                    onLastNameChanged = { onboardingState = onboardingState.copy(lastName = it) },
+                    onEmailChanged = { onboardingState = onboardingState.copy(email = it) },
+                    onCreateAccount = { step = AppStep.Done },
+                )
 
-        AppStep.Done ->
-            SuccessScreen(
-                fullName = "${onboardingState.firstName} ${onboardingState.lastName}".trim(),
-                onRestart = {
-                    phone = ""
-                    authSession++
-                    onboardingState = OnboardingUiState()
-                    step = AppStep.Auth
-                },
-            )
+            AppStep.Done ->
+                SuccessScreen(
+                    fullName = "${onboardingState.firstName} ${onboardingState.lastName}".trim(),
+                    onRestart = {
+                        phone = ""
+                        authSession++
+                        onboardingState = OnboardingUiState()
+                        step = AppStep.Auth
+                    },
+                )
+        }
     }
 }
 
