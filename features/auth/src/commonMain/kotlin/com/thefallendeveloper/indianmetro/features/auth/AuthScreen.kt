@@ -20,7 +20,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +37,8 @@ import com.thefallendeveloper.indianmetro.designsystem.components.MetroLabeledPh
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroThemeTokens
 import com.thefallendeveloper.indianmetro.designsystem.tokens.ColorTokens
+import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthFeatureNavigationSubscription
+import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigationRoutes
 import indianmetro.features.auth.generated.resources.Res
 import indianmetro.features.auth.generated.resources.auth_mobile_number_label
 import indianmetro.features.auth.generated.resources.auth_otp_code_label
@@ -65,16 +66,9 @@ fun AuthRoute(
     val navController = rememberNavController()
 
     AuthFeatureNavigationSubscription(
-        viewModel = viewModel,
-        onAuthCompleted = onAuthCompleted,
+        navHostController = navController,
         featureNavigator = featureNavigator,
     )
-
-    LaunchedEffect(featureNavigator, navController) {
-        featureNavigator.route.collect { route ->
-            navController.navigate(route.route)
-        }
-    }
 
     NavHost(
         navController = navController,
@@ -100,6 +94,9 @@ fun AuthRoute(
                 },
                 onVerify = {
                     viewModel.emitEvent(PhoneEntryViewModel.Event.VerifyClicked)
+                    if (state.verifyClickable) {
+                        onAuthCompleted(state.phoneNumber)
+                    }
                 },
                 onResend = {
                     viewModel.emitEvent(PhoneEntryViewModel.Event.ResendClicked)

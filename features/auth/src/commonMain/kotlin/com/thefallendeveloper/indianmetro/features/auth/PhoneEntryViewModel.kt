@@ -2,19 +2,19 @@ package com.thefallendeveloper.indianmetro.features.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
+import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigationRoutes
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class PhoneEntryViewModel : ViewModel() {
+class PhoneEntryViewModel(
+    private val featureNavigator: FeatureNavigator<AuthNavigationRoutes>,
+) : ViewModel() {
     private val events = MutableSharedFlow<Event>()
-    private val effects = MutableSharedFlow<Effect>()
-
-    val effect = effects.asSharedFlow()
 
     val state: StateFlow<State> =
         events
@@ -38,13 +38,7 @@ class PhoneEntryViewModel : ViewModel() {
             when (event) {
                 Event.ContinueClicked -> {
                     if (state.value.continueClickable) {
-                        effects.emit(Effect.NavigateToOtp)
-                    }
-                }
-
-                Event.VerifyClicked -> {
-                    if (state.value.verifyClickable) {
-                        effects.emit(Effect.NavigateToOnboarding(state.value.phoneNumber))
+                        featureNavigator.navigateTo(AuthNavigationRoutes.OtpEntry)
                     }
                 }
 
@@ -78,14 +72,6 @@ class PhoneEntryViewModel : ViewModel() {
 
         val verifyClickable: Boolean
             get() = otp.length == MAX_OTP_LENGTH
-    }
-
-    sealed class Effect {
-        data object NavigateToOtp : Effect()
-
-        data class NavigateToOnboarding(
-            val phoneNumber: String,
-        ) : Effect()
     }
 
     private fun initState() =

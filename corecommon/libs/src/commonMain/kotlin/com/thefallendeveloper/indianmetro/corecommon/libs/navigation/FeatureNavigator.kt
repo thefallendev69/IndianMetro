@@ -6,16 +6,16 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
 class FeatureNavigator<Route> {
-    private val navigationMutableSharedFlow =
+    private val _destination =
         MutableSharedFlow<Route>(
             replay = 0,
             extraBufferCapacity = 1,
             onBufferOverflow = BufferOverflow.DROP_OLDEST,
         )
 
-    val route: SharedFlow<Route> = navigationMutableSharedFlow.asSharedFlow()
+    val destination: SharedFlow<Route> = _destination.asSharedFlow()
 
     fun navigateTo(route: Route) {
-        navigationMutableSharedFlow.tryEmit(route)
+        _destination.tryEmit(route)
     }
 }

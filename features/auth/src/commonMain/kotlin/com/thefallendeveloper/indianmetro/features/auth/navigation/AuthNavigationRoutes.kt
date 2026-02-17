@@ -1,4 +1,4 @@
-package com.thefallendeveloper.indianmetro.features.auth
+package com.thefallendeveloper.indianmetro.features.auth.navigation
 
 sealed class AuthNavigationRoutes(
     val route: String,
