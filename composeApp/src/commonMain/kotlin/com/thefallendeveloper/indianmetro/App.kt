@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.AppNavigator
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigatorSubscription
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.routes.AppRoutes
@@ -41,6 +42,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
+import org.koin.core.qualifier.named
 
 private object AppNavRoute {
     const val AUTH = "auth"
@@ -53,7 +55,7 @@ private object AppNavRoute {
 fun App() {
     KoinApplication(application = { modules(authModule, onboardingModule) }) {
         val navController = rememberNavController()
-        val appNavigator: FeatureNavigator<AppRoutes> = koinInject()
+        val appNavigator: FeatureNavigator<AppRoutes> = koinInject(qualifier = named<AppNavigator>())
         var onboardingState by remember { mutableStateOf(OnboardingUiState()) }
 
         FeatureNavigatorSubscription(
