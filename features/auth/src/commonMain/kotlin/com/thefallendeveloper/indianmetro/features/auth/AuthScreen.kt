@@ -32,12 +32,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
+import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigatorSubscription
 import com.thefallendeveloper.indianmetro.designsystem.components.GradientPrimaryButton
 import com.thefallendeveloper.indianmetro.designsystem.components.MetroLabeledPhoneInputField
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroThemeTokens
 import com.thefallendeveloper.indianmetro.designsystem.tokens.ColorTokens
-import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthFeatureNavigationSubscription
 import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigationRoutes
 import indianmetro.features.auth.generated.resources.Res
 import indianmetro.features.auth.generated.resources.auth_mobile_number_label
@@ -65,9 +65,10 @@ fun AuthRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val navController = rememberNavController()
 
-    AuthFeatureNavigationSubscription(
+    FeatureNavigatorSubscription(
         navHostController = navController,
         featureNavigator = featureNavigator,
+        routeMapper = { route -> route.route },
     )
 
     NavHost(

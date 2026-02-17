@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.indianmetroLintConventions)
 }
 
@@ -20,6 +22,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(compose.runtime)
+            implementation(libs.jetbrains.navigation.compose)
             implementation(libs.io.koin.common)
             implementation(libs.kotlinx.coroutines.core)
         }
