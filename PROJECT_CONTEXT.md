@@ -34,3 +34,11 @@
 
 ## Notes
 - Keep this file updated as decisions evolve.
+
+## Autonomous Workflow
+- Implement the required task end-to-end.
+- Verify the implemented task works.
+- Ensure the solution adheres to architecture and project conventions.
+- Run final build verification for impacted modules and `composeApp`; for cross-module or structural refactors run `./gradlew build`.
+- Run lint checks, fix issues if required, and re-run verification.
+- Commit with a meaningful message and push.

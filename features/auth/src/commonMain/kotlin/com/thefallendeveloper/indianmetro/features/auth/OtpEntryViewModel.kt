@@ -2,6 +2,8 @@ package com.thefallendeveloper.indianmetro.features.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
+import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.routes.AppRoutes
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -9,7 +11,9 @@ import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class OtpEntryViewModel : ViewModel() {
+class OtpEntryViewModel(
+    private val appNavigator: FeatureNavigator<AppRoutes>,
+) : ViewModel() {
     private val events = MutableSharedFlow<Event>()
 
     val state: StateFlow<State> =
@@ -29,6 +33,9 @@ class OtpEntryViewModel : ViewModel() {
     fun emitEvent(event: Event) {
         viewModelScope.launch {
             events.emit(event)
+            if (event == Event.VerifyClicked && state.value.verifyClickable) {
+                appNavigator.navigateTo(AppRoutes.AppOnboarding)
+            }
         }
     }
 

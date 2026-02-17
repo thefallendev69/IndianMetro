@@ -60,7 +60,6 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AuthRoute(
-    onAuthCompleted: (String) -> Unit,
     featureNavigator: FeatureNavigator<AuthNavigationRoutes> = koinInject(),
 ) {
     val navController = rememberNavController()
@@ -112,9 +111,6 @@ fun AuthRoute(
                 },
                 onVerify = {
                     otpEntryViewModel.emitEvent(OtpEntryViewModel.Event.VerifyClicked)
-                    if (otpEntryState.verifyClickable) {
-                        onAuthCompleted(phoneNumber)
-                    }
                 },
                 onResend = {
                     otpEntryViewModel.emitEvent(OtpEntryViewModel.Event.ResendClicked)

@@ -20,6 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
+import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigatorSubscription
+import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.routes.AppRoutes
 import com.thefallendeveloper.indianmetro.designsystem.components.GradientPrimaryButton
 import com.thefallendeveloper.indianmetro.designsystem.components.SecondaryButton
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
@@ -37,6 +40,7 @@ import indianmetro.composeapp.generated.resources.app_welcome_user
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
+import org.koin.compose.koinInject
 
 private object AppNavRoute {
     const val AUTH = "auth"
@@ -49,18 +53,26 @@ private object AppNavRoute {
 fun App() {
     KoinApplication(application = { modules(authModule, onboardingModule) }) {
         val navController = rememberNavController()
+        val appNavigator: FeatureNavigator<AppRoutes> = koinInject()
         var onboardingState by remember { mutableStateOf(OnboardingUiState()) }
+
+        FeatureNavigatorSubscription(
+            navHostController = navController,
+            featureNavigator = appNavigator,
+            routeMapper = { appRoute ->
+                when (appRoute) {
+                    AppRoutes.Auth -> AppNavRoute.AUTH
+                    AppRoutes.AppOnboarding -> AppNavRoute.ONBOARDING
+                }
+            },
+        )
 
         NavHost(
             navController = navController,
             startDestination = AppNavRoute.AUTH,
         ) {
             composable(AppNavRoute.AUTH) {
-                AuthRoute(
-                    onAuthCompleted = { enteredPhone ->
-                        navController.navigate(AppNavRoute.ONBOARDING)
-                    },
-                )
+                AuthRoute()
             }
 
             composable(AppNavRoute.ONBOARDING) {
