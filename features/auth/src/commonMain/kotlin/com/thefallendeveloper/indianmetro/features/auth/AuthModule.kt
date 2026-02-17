@@ -8,5 +8,5 @@ import org.koin.dsl.module
 val authModule: Module =
     module {
         includes(featureNavigatorModule<AuthNavigationRoutes>())
-        factory { PhoneEntryViewModel() }
+        factory { PhoneEntryViewModel(featureNavigator = get()) }
     }
