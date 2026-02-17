@@ -3,6 +3,7 @@ package com.thefallendeveloper.indianmetro.features.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
+import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.routes.AppRoutes
 import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigationRoutes
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -32,17 +33,6 @@ class PhoneEntryViewModel(
     fun emitEvent(event: Event) {
         viewModelScope.launch {
             events.emit(event)
-            when (event) {
-                Event.ContinueClicked -> {
-                    if (state.value.continueClickable) {
-                        featureNavigator.navigateTo(
-                            AuthNavigationRoutes.OtpEntry(phoneNumber = state.value.phoneNumber)
-                        )
-                    }
-                }
-
-                else -> Unit
-            }
         }
     }
 
@@ -74,7 +64,14 @@ class PhoneEntryViewModel(
         return prevState.copy(phoneNumber = value)
     }
 
-    private fun reduceStateOnContinueButtonClicked(prevState: State): State = prevState
+    private fun reduceStateOnContinueButtonClicked(prevState: State): State {
+        featureNavigator.navigateTo(AuthNavigationRoutes.OtpEntry)
+        return prevState
+    }
+
+    private fun reduceOnNavigateToOtpEntryClicked(prevState: State): State {
+        return prevState
+    }
 
     private companion object {
         const val MAX_PHONE_LENGTH = 10
