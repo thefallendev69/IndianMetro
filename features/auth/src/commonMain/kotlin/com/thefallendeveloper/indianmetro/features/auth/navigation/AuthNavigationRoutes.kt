@@ -5,5 +5,12 @@ sealed class AuthNavigationRoutes(
 ) {
     data object PhoneEntry : AuthNavigationRoutes(route = "auth/phone-entry")
 
-    data object OtpEntry : AuthNavigationRoutes(route = "auth/otp-entry")
+    data class OtpEntry(
+        val phoneNumber: String,
+    ) : AuthNavigationRoutes(route = "auth/otp-entry/$phoneNumber")
+
+    companion object {
+        const val OTP_ENTRY_ARGUMENT_PHONE_NUMBER = "phoneNumber"
+        const val OTP_ENTRY_ROUTE_PATTERN = "auth/otp-entry/{$OTP_ENTRY_ARGUMENT_PHONE_NUMBER}"
+    }
 }

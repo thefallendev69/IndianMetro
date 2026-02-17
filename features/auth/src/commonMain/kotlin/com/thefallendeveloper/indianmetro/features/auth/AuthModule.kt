@@ -9,4 +9,5 @@ val authModule: Module =
     module {
         includes(featureNavigatorModule<AuthNavigationRoutes>())
         factory { PhoneEntryViewModel(featureNavigator = get()) }
+        factory { OtpEntryViewModel() }
     }

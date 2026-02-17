@@ -49,8 +49,6 @@ private object AppNavRoute {
 fun App() {
     KoinApplication(application = { modules(authModule, onboardingModule) }) {
         val navController = rememberNavController()
-        var authSession by remember { mutableStateOf(0) }
-        var phone by remember { mutableStateOf("") }
         var onboardingState by remember { mutableStateOf(OnboardingUiState()) }
 
         NavHost(
@@ -59,9 +57,7 @@ fun App() {
         ) {
             composable(AppNavRoute.AUTH) {
                 AuthRoute(
-                    viewModelKey = "auth-route-$authSession",
                     onAuthCompleted = { enteredPhone ->
-                        phone = enteredPhone
                         navController.navigate(AppNavRoute.ONBOARDING)
                     },
                 )
@@ -81,8 +77,6 @@ fun App() {
                 SuccessScreen(
                     fullName = "${onboardingState.firstName} ${onboardingState.lastName}".trim(),
                     onRestart = {
-                        phone = ""
-                        authSession++
                         onboardingState = OnboardingUiState()
                         navController.navigate(AppNavRoute.AUTH) {
                             popUpTo(navController.graph.id) { inclusive = true }

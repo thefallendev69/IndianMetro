@@ -22,9 +22,6 @@ class PhoneEntryViewModel(
                 when (event) {
                     is Event.PhoneNumberChanged -> reduceStateOnPhoneNumberChanged(prevState, event)
                     Event.ContinueClicked -> reduceStateOnContinueButtonClicked(prevState)
-                    is Event.OtpChanged -> reduceStateOnOtpChanged(prevState, event)
-                    Event.VerifyClicked -> reduceStateOnVerifyClicked(prevState)
-                    Event.ResendClicked -> reduceStateOnResendClicked(prevState)
                 }
             }.stateIn(
                 scope = viewModelScope,
@@ -38,7 +35,9 @@ class PhoneEntryViewModel(
             when (event) {
                 Event.ContinueClicked -> {
                     if (state.value.continueClickable) {
-                        featureNavigator.navigateTo(AuthNavigationRoutes.OtpEntry)
+                        featureNavigator.navigateTo(
+                            AuthNavigationRoutes.OtpEntry(phoneNumber = state.value.phoneNumber)
+                        )
                     }
                 }
 
@@ -53,31 +52,18 @@ class PhoneEntryViewModel(
         ) : Event()
 
         data object ContinueClicked : Event()
-
-        data class OtpChanged(
-            val value: String,
-        ) : Event()
-
-        data object VerifyClicked : Event()
-
-        data object ResendClicked : Event()
     }
 
     data class State(
         val phoneNumber: String,
-        val otp: String,
     ) {
         val continueClickable: Boolean
             get() = phoneNumber.length == MAX_PHONE_LENGTH
-
-        val verifyClickable: Boolean
-            get() = otp.length == MAX_OTP_LENGTH
     }
 
     private fun initState() =
         State(
             phoneNumber = "",
-            otp = "",
         )
 
     private fun reduceStateOnPhoneNumberChanged(
@@ -90,20 +76,7 @@ class PhoneEntryViewModel(
 
     private fun reduceStateOnContinueButtonClicked(prevState: State): State = prevState
 
-    private fun reduceStateOnOtpChanged(
-        prevState: State,
-        event: Event.OtpChanged,
-    ): State {
-        val value = event.value.filter(Char::isDigit).take(MAX_OTP_LENGTH)
-        return prevState.copy(otp = value)
-    }
-
-    private fun reduceStateOnVerifyClicked(prevState: State): State = prevState
-
-    private fun reduceStateOnResendClicked(prevState: State): State = prevState.copy(otp = "")
-
     private companion object {
         const val MAX_PHONE_LENGTH = 10
-        const val MAX_OTP_LENGTH = 6
     }
 }

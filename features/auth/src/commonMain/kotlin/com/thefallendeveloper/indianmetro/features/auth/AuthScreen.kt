@@ -28,9 +28,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigatorSubscription
 import com.thefallendeveloper.indianmetro.designsystem.components.GradientPrimaryButton
@@ -58,11 +61,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AuthRoute(
     onAuthCompleted: (String) -> Unit,
-    viewModelKey: String = "auth-view-model",
-    viewModel: PhoneEntryViewModel = koinViewModel(key = viewModelKey),
     featureNavigator: FeatureNavigator<AuthNavigationRoutes> = koinInject(),
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val navController = rememberNavController()
 
     FeatureNavigatorSubscription(
@@ -76,31 +76,48 @@ fun AuthRoute(
         startDestination = AuthNavigationRoutes.PhoneEntry.route,
     ) {
         composable(AuthNavigationRoutes.PhoneEntry.route) {
+            val phoneEntryViewModel: PhoneEntryViewModel = koinViewModel(key = "phone-entry-view-model")
+            val phoneEntryState by phoneEntryViewModel.state.collectAsStateWithLifecycle()
             AuthPhoneEntryScreen(
-                phoneNumber = state.phoneNumber,
+                phoneNumber = phoneEntryState.phoneNumber,
                 onPhoneNumberChanged = { value ->
-                    viewModel.emitEvent(PhoneEntryViewModel.Event.PhoneNumberChanged(value))
+                    phoneEntryViewModel.emitEvent(PhoneEntryViewModel.Event.PhoneNumberChanged(value))
                 },
                 onContinue = {
-                    viewModel.emitEvent(PhoneEntryViewModel.Event.ContinueClicked)
+                    phoneEntryViewModel.emitEvent(PhoneEntryViewModel.Event.ContinueClicked)
                 },
             )
         }
 
-        composable(AuthNavigationRoutes.OtpEntry.route) {
+        composable(
+            route = AuthNavigationRoutes.OTP_ENTRY_ROUTE_PATTERN,
+            arguments =
+                listOf(
+                    navArgument(AuthNavigationRoutes.OTP_ENTRY_ARGUMENT_PHONE_NUMBER) {
+                        type = NavType.StringType
+                    },
+                ),
+        ) { backStackEntry: NavBackStackEntry ->
+            val phoneNumber =
+                backStackEntry
+                    .arguments
+                    ?.getString(AuthNavigationRoutes.OTP_ENTRY_ARGUMENT_PHONE_NUMBER)
+                    .orEmpty()
+            val otpEntryViewModel: OtpEntryViewModel = koinViewModel(key = "otp-entry-view-model-$phoneNumber")
+            val otpEntryState by otpEntryViewModel.state.collectAsStateWithLifecycle()
             AuthOtpScreen(
-                otp = state.otp,
+                otp = otpEntryState.otp,
                 onOtpChanged = { value ->
-                    viewModel.emitEvent(PhoneEntryViewModel.Event.OtpChanged(value))
+                    otpEntryViewModel.emitEvent(OtpEntryViewModel.Event.OtpChanged(value))
                 },
                 onVerify = {
-                    viewModel.emitEvent(PhoneEntryViewModel.Event.VerifyClicked)
-                    if (state.verifyClickable) {
-                        onAuthCompleted(state.phoneNumber)
+                    otpEntryViewModel.emitEvent(OtpEntryViewModel.Event.VerifyClicked)
+                    if (otpEntryState.verifyClickable) {
+                        onAuthCompleted(phoneNumber)
                     }
                 },
                 onResend = {
-                    viewModel.emitEvent(PhoneEntryViewModel.Event.ResendClicked)
+                    otpEntryViewModel.emitEvent(OtpEntryViewModel.Event.ResendClicked)
                 },
             )
         }

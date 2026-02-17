@@ -3,6 +3,7 @@ package com.thefallendeveloper.indianmetro.corecommon.libs.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
+
 @Composable
 fun <Route> FeatureNavigatorSubscription(
     navHostController: NavHostController,
