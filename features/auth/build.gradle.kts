@@ -22,7 +22,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.designsystem)
+            implementation(projects.corecommon.libs)
+            implementation(projects.corecommon.designsystem)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)

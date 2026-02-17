@@ -31,6 +31,8 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
-include(":designsystem")
+include(":corecommon")
+include(":corecommon:designsystem")
+include(":corecommon:libs")
 include(":features:auth")
 include(":features:onboarding")

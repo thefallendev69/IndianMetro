@@ -32,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
 import com.thefallendeveloper.indianmetro.designsystem.components.GradientPrimaryButton
 import com.thefallendeveloper.indianmetro.designsystem.components.MetroLabeledPhoneInputField
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
@@ -49,8 +50,8 @@ import indianmetro.features.auth.generated.resources.auth_sign_in_title
 import indianmetro.features.auth.generated.resources.auth_verify_otp
 import indianmetro.features.auth.generated.resources.auth_verify_otp_subtitle
 import indianmetro.features.auth.generated.resources.auth_verify_otp_title
-import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -58,21 +59,20 @@ fun AuthRoute(
     onAuthCompleted: (String) -> Unit,
     viewModelKey: String = "auth-view-model",
     viewModel: PhoneEntryViewModel = koinViewModel(key = viewModelKey),
+    featureNavigator: FeatureNavigator<AuthNavigationRoutes> = koinInject(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val navController = rememberNavController()
 
-    LaunchedEffect(viewModel) {
-        viewModel.effect.collectLatest { effect ->
-            when (effect) {
-                PhoneEntryViewModel.Effect.NavigateToOtp -> {
-                    navController.navigate(AuthNavigationRoutes.OtpEntry.route)
-                }
+    AuthFeatureNavigationSubscription(
+        viewModel = viewModel,
+        onAuthCompleted = onAuthCompleted,
+        featureNavigator = featureNavigator,
+    )
 
-                is PhoneEntryViewModel.Effect.NavigateToOnboarding -> {
-                    onAuthCompleted(effect.phoneNumber)
-                }
-            }
+    LaunchedEffect(featureNavigator, navController) {
+        featureNavigator.route.collect { route ->
+            navController.navigate(route.route)
         }
     }
 

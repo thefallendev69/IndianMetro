@@ -3,8 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.indianmetroLintConventions)
 }
 
@@ -22,22 +20,14 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.corecommon.designsystem)
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
             implementation(libs.io.koin.common)
-            implementation(libs.io.koin.compose)
             implementation(libs.kotlinx.coroutines.core)
         }
     }
 }
 
 android {
-    namespace = "com.thefallendeveloper.indianmetro.features.onboarding"
+    namespace = "com.thefallendeveloper.indianmetro.corecommon.libs"
     compileSdk =
         libs.versions.android.compileSdk
             .get()

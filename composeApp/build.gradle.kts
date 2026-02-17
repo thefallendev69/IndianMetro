@@ -32,7 +32,7 @@ kotlin {
             implementation(libs.io.koin.android)
         }
         commonMain.dependencies {
-            implementation(projects.designsystem)
+            implementation(projects.corecommon.designsystem)
             implementation(projects.features.auth)
             implementation(projects.features.onboarding)
             implementation(compose.runtime)
