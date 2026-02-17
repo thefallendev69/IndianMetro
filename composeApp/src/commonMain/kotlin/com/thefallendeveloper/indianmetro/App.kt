@@ -17,6 +17,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.thefallendeveloper.indianmetro.designsystem.components.GradientPrimaryButton
 import com.thefallendeveloper.indianmetro.designsystem.components.SecondaryButton
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
@@ -25,6 +28,7 @@ import com.thefallendeveloper.indianmetro.features.auth.AuthRoute
 import com.thefallendeveloper.indianmetro.features.auth.authModule
 import com.thefallendeveloper.indianmetro.features.onboarding.OnboardingScreen
 import com.thefallendeveloper.indianmetro.features.onboarding.OnboardingUiState
+import com.thefallendeveloper.indianmetro.features.onboarding.onboardingModule
 import indianmetro.composeapp.generated.resources.Res
 import indianmetro.composeapp.generated.resources.app_account_created
 import indianmetro.composeapp.generated.resources.app_continue
@@ -34,50 +38,59 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
 
-private enum class AppStep {
-    Auth,
-    PassengerDetails,
-    Done,
+private object AppNavRoute {
+    const val AUTH = "auth"
+    const val ONBOARDING = "onboarding"
+    const val DONE = "done"
 }
 
 @Composable
 @Preview
 fun App() {
-    KoinApplication(application = { modules(authModule) }) {
-        var step by remember { mutableStateOf(AppStep.Auth) }
+    KoinApplication(application = { modules(authModule, onboardingModule) }) {
+        val navController = rememberNavController()
         var authSession by remember { mutableStateOf(0) }
         var phone by remember { mutableStateOf("") }
         var onboardingState by remember { mutableStateOf(OnboardingUiState()) }
 
-        when (step) {
-            AppStep.Auth ->
+        NavHost(
+            navController = navController,
+            startDestination = AppNavRoute.AUTH,
+        ) {
+            composable(AppNavRoute.AUTH) {
                 AuthRoute(
                     viewModelKey = "auth-route-$authSession",
                     onAuthCompleted = { enteredPhone ->
                         phone = enteredPhone
-                        step = AppStep.PassengerDetails
+                        navController.navigate(AppNavRoute.ONBOARDING)
                     },
                 )
+            }
 
-            AppStep.PassengerDetails ->
+            composable(AppNavRoute.ONBOARDING) {
                 OnboardingScreen(
                     state = onboardingState,
                     onFirstNameChanged = { onboardingState = onboardingState.copy(firstName = it) },
                     onLastNameChanged = { onboardingState = onboardingState.copy(lastName = it) },
                     onEmailChanged = { onboardingState = onboardingState.copy(email = it) },
-                    onCreateAccount = { step = AppStep.Done },
+                    onCreateAccount = { navController.navigate(AppNavRoute.DONE) },
                 )
+            }
 
-            AppStep.Done ->
+            composable(AppNavRoute.DONE) {
                 SuccessScreen(
                     fullName = "${onboardingState.firstName} ${onboardingState.lastName}".trim(),
                     onRestart = {
                         phone = ""
                         authSession++
                         onboardingState = OnboardingUiState()
-                        step = AppStep.Auth
+                        navController.navigate(AppNavRoute.AUTH) {
+                            popUpTo(navController.graph.id) { inclusive = true }
+                            launchSingleTop = true
+                        }
                     },
                 )
+            }
         }
     }
 }

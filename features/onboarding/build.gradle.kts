@@ -29,6 +29,9 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
+            implementation(libs.io.koin.common)
+            implementation(libs.io.koin.compose)
+            implementation(libs.kotlinx.coroutines.core)
         }
     }
 }

@@ -36,6 +36,12 @@ class PhoneEntryViewModel : ViewModel() {
         viewModelScope.launch {
             events.emit(event)
             when (event) {
+                Event.ContinueClicked -> {
+                    if (state.value.continueClickable) {
+                        effects.emit(Effect.NavigateToOtp)
+                    }
+                }
+
                 Event.VerifyClicked -> {
                     if (state.value.verifyClickable) {
                         effects.emit(Effect.NavigateToOnboarding(state.value.phoneNumber))
@@ -66,7 +72,6 @@ class PhoneEntryViewModel : ViewModel() {
     data class State(
         val phoneNumber: String,
         val otp: String,
-        val authStep: AuthStep,
     ) {
         val continueClickable: Boolean
             get() = phoneNumber.length == MAX_PHONE_LENGTH
@@ -76,21 +81,17 @@ class PhoneEntryViewModel : ViewModel() {
     }
 
     sealed class Effect {
+        data object NavigateToOtp : Effect()
+
         data class NavigateToOnboarding(
             val phoneNumber: String,
         ) : Effect()
-    }
-
-    enum class AuthStep {
-        PhoneEntry,
-        OtpEntry,
     }
 
     private fun initState() =
         State(
             phoneNumber = "",
             otp = "",
-            authStep = AuthStep.PhoneEntry,
         )
 
     private fun reduceStateOnPhoneNumberChanged(
@@ -101,12 +102,7 @@ class PhoneEntryViewModel : ViewModel() {
         return prevState.copy(phoneNumber = value)
     }
 
-    private fun reduceStateOnContinueButtonClicked(prevState: State): State =
-        if (prevState.continueClickable) {
-            prevState.copy(authStep = AuthStep.OtpEntry)
-        } else {
-            prevState
-        }
+    private fun reduceStateOnContinueButtonClicked(prevState: State): State = prevState
 
     private fun reduceStateOnOtpChanged(
         prevState: State,

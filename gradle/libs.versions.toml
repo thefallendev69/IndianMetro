@@ -19,6 +19,7 @@ koin = "4.1.1"
 coroutines = "1.10.2"
 ktlint = "14.0.1"
 detekt = "1.23.8"
+navigation = "2.9.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -39,6 +40,7 @@ io-koin-compose = { group = "io.insert-koin", name = "koin-compose", version.ref
 io-koin-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }
 io-koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+jetbrains-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

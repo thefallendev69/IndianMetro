@@ -1,3 +1,8 @@
+complexity:
+  LongMethod:
+    ignoreAnnotated:
+      - Composable
+
 style:
   MagicNumber:
     active: false

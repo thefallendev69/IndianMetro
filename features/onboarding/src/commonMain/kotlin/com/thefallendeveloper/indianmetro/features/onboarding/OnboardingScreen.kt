@@ -46,60 +46,64 @@ fun OnboardingScreen(
     onCreateAccount: () -> Unit,
 ) {
     IndianMetroTheme {
-        val spacing = IndianMetroThemeTokens.spacing
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-                    .safeDrawingPadding(),
-        ) {
-            TopProgressStrip()
-
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = spacing.medium, vertical = spacing.small),
-            ) {
-                ProfileIcon()
-                HeaderSection()
-
-                Row(horizontalArrangement = Arrangement.spacedBy(spacing.small)) {
-                    MetroLabeledInputField(
-                        label = stringResource(Res.string.onboarding_first_name_label),
-                        value = state.firstName,
-                        onValueChange = onFirstNameChanged,
-                        placeholder = stringResource(Res.string.onboarding_first_name_placeholder),
-                        modifier = Modifier.weight(1f),
-                    )
-                    MetroLabeledInputField(
-                        label = stringResource(Res.string.onboarding_last_name_label),
-                        value = state.lastName,
-                        onValueChange = onLastNameChanged,
-                        placeholder = stringResource(Res.string.onboarding_last_name_placeholder),
-                        modifier = Modifier.weight(1f),
-                    )
-                }
-
-                MetroLabeledInputField(
-                    label = stringResource(Res.string.onboarding_email_label),
-                    value = state.email,
-                    onValueChange = onEmailChanged,
-                    placeholder = stringResource(Res.string.onboarding_email_placeholder),
-                    modifier = Modifier.padding(top = spacing.small),
-                )
-
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomCenter,
+        when (onboardingFeatureNavigationSubscription()) {
+            OnboardingNavigationRoutes.PassengerDetails -> {
+                val spacing = IndianMetroThemeTokens.spacing
+                Column(
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.background)
+                            .safeDrawingPadding(),
                 ) {
-                    GradientPrimaryButton(
-                        text = stringResource(Res.string.onboarding_create_account),
-                        onClick = onCreateAccount,
-                        enabled = state.firstName.isNotBlank() && state.lastName.isNotBlank(),
-                        modifier = Modifier.padding(bottom = spacing.medium),
-                    )
+                    TopProgressStrip()
+
+                    Column(
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = spacing.medium, vertical = spacing.small),
+                    ) {
+                        ProfileIcon()
+                        HeaderSection()
+
+                        Row(horizontalArrangement = Arrangement.spacedBy(spacing.small)) {
+                            MetroLabeledInputField(
+                                label = stringResource(Res.string.onboarding_first_name_label),
+                                value = state.firstName,
+                                onValueChange = onFirstNameChanged,
+                                placeholder = stringResource(Res.string.onboarding_first_name_placeholder),
+                                modifier = Modifier.weight(1f),
+                            )
+                            MetroLabeledInputField(
+                                label = stringResource(Res.string.onboarding_last_name_label),
+                                value = state.lastName,
+                                onValueChange = onLastNameChanged,
+                                placeholder = stringResource(Res.string.onboarding_last_name_placeholder),
+                                modifier = Modifier.weight(1f),
+                            )
+                        }
+
+                        MetroLabeledInputField(
+                            label = stringResource(Res.string.onboarding_email_label),
+                            value = state.email,
+                            onValueChange = onEmailChanged,
+                            placeholder = stringResource(Res.string.onboarding_email_placeholder),
+                            modifier = Modifier.padding(top = spacing.small),
+                        )
+
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.BottomCenter,
+                        ) {
+                            GradientPrimaryButton(
+                                text = stringResource(Res.string.onboarding_create_account),
+                                onClick = onCreateAccount,
+                                enabled = state.firstName.isNotBlank() && state.lastName.isNotBlank(),
+                                modifier = Modifier.padding(bottom = spacing.medium),
+                            )
+                        }
+                    }
                 }
             }
         }

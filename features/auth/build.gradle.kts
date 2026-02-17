@@ -29,6 +29,7 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
+            implementation(libs.jetbrains.navigation.compose)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.io.koin.common)
             implementation(libs.io.koin.compose)

@@ -29,6 +29,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.thefallendeveloper.indianmetro.designsystem.components.GradientPrimaryButton
 import com.thefallendeveloper.indianmetro.designsystem.components.MetroLabeledPhoneInputField
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
@@ -57,17 +60,27 @@ fun AuthRoute(
     viewModel: PhoneEntryViewModel = koinViewModel(key = viewModelKey),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val navController = rememberNavController()
 
     LaunchedEffect(viewModel) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
-                is PhoneEntryViewModel.Effect.NavigateToOnboarding -> onAuthCompleted(effect.phoneNumber)
+                PhoneEntryViewModel.Effect.NavigateToOtp -> {
+                    navController.navigate(AuthNavigationRoutes.OtpEntry.route)
+                }
+
+                is PhoneEntryViewModel.Effect.NavigateToOnboarding -> {
+                    onAuthCompleted(effect.phoneNumber)
+                }
             }
         }
     }
 
-    when (state.authStep) {
-        PhoneEntryViewModel.AuthStep.PhoneEntry ->
+    NavHost(
+        navController = navController,
+        startDestination = AuthNavigationRoutes.PhoneEntry.route,
+    ) {
+        composable(AuthNavigationRoutes.PhoneEntry.route) {
             AuthPhoneEntryScreen(
                 phoneNumber = state.phoneNumber,
                 onPhoneNumberChanged = { value ->
@@ -77,8 +90,9 @@ fun AuthRoute(
                     viewModel.emitEvent(PhoneEntryViewModel.Event.ContinueClicked)
                 },
             )
+        }
 
-        PhoneEntryViewModel.AuthStep.OtpEntry ->
+        composable(AuthNavigationRoutes.OtpEntry.route) {
             AuthOtpScreen(
                 otp = state.otp,
                 onOtpChanged = { value ->
@@ -91,6 +105,7 @@ fun AuthRoute(
                     viewModel.emitEvent(PhoneEntryViewModel.Event.ResendClicked)
                 },
             )
+        }
     }
 }
 

@@ -5,5 +5,6 @@ import org.koin.dsl.module
 
 val authModule: Module =
     module {
+        single { AuthFeatureNavigator() }
         factory { PhoneEntryViewModel() }
     }
