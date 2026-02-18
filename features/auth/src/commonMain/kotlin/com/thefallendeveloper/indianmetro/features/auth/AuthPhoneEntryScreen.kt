@@ -23,11 +23,10 @@ import indianmetro.features.auth.generated.resources.auth_send_otp
 import indianmetro.features.auth.generated.resources.auth_sign_in_subtitle
 import indianmetro.features.auth.generated.resources.auth_sign_in_title
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun AuthPhoneEntryScreen(
-    viewModel: PhoneEntryViewModel,
-) {
+fun AuthPhoneEntryScreen(viewModel: PhoneEntryViewModel = koinViewModel(key = "phone-entry-view-model"),) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     IndianMetroTheme {

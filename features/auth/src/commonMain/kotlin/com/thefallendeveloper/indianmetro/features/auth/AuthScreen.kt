@@ -6,16 +6,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.savedstate.read
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigatorSubscription
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.routes.decodeArgs
-import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigator
 import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigationRoutes
+import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigator
 import com.thefallendeveloper.indianmetro.features.auth.navigation.OtpEntryArgs
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.qualifier.named
 import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 
 @Composable
 fun AuthRoute(
@@ -33,9 +34,7 @@ fun AuthRoute(
         startDestination = AuthNavigationRoutes.PhoneEntry.route,
     ) {
         composable(AuthNavigationRoutes.PhoneEntry.route) {
-            AuthPhoneEntryScreen(
-                viewModel = koinViewModel(key = "phone-entry-view-model"),
-            )
+            AuthPhoneEntryScreen()
         }
 
         composable(
@@ -50,7 +49,7 @@ fun AuthRoute(
             val encodedArgs =
                 backStackEntry
                     .arguments
-                    ?.getString(AuthNavigationRoutes.OTP_ENTRY_ARGUMENT)
+                    ?.read { getStringOrNull(AuthNavigationRoutes.OTP_ENTRY_ARGUMENT) }
                     ?: return@composable
             val otpEntryArgs: OtpEntryArgs = AuthNavigationRoutes.PhoneEntry.decodeArgs(encodedArgs)
             AuthOtpScreen(

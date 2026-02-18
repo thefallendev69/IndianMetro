@@ -1,8 +1,8 @@
 package com.thefallendeveloper.indianmetro.corecommon.libs.navigation.routes
 
+import kotlinx.serialization.json.Json
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
-import kotlinx.serialization.json.Json
 
 abstract class BaseRoute(
     val route: String,

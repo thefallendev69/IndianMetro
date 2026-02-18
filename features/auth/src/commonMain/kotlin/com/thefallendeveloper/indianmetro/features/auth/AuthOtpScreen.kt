@@ -37,9 +37,7 @@ import indianmetro.features.auth.generated.resources.auth_verify_otp_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AuthOtpScreen(
-    viewModel: OtpEntryViewModel,
-) {
+fun AuthOtpScreen(viewModel: OtpEntryViewModel,) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     IndianMetroTheme {
