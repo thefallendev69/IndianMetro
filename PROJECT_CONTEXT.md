@@ -14,6 +14,9 @@
 - Dependency injection uses Koin.
 - Navigation is being migrated to Compose Navigation (`nav2`).
 - UI architecture pattern: MVI.
+- Architecture reference docs:
+  - `docs/ARCHITECTURE_GUIDELINES.md`
+  - `docs/CORECOMMON_USAGE.md`
 
 ## Conventions
 - Base package: `com.thefallendeveloper.indianmetro`
@@ -23,14 +26,10 @@
 - If a file contains only one class, the filename must match the class name.
 
 ## Current Navigation Direction
-- Each feature can define:
-  - `FeatureNavigator` (class, singleton via DI; not object)
-  - `NavigationRoutes`
-  - `FeatureNavigationSubscription` composable
-- Feature navigators expose:
-  - private `MutableStateFlow`
-  - public `StateFlow`
-  - public push method for route updates
+- Route models extend `BaseRoute`.
+- `FeatureNavigator` is typed as `FeatureNavigator<Route : BaseRoute>`.
+- `FeatureNavigatorSubscription` consumes `FeatureNavigator<out BaseRoute>` and navigates via `route.route`.
+- Use typed route args, encoded/decoded through shared `BaseRoute` extensions.
 
 ## Notes
 - Keep this file updated as decisions evolve.
