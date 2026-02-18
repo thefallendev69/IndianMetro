@@ -37,3 +37,6 @@ PR comment handling flow:
 
 Reference:
 - `docs/TASK_COMPLETION_GUIDELINES.md`
+- `README.md`:
+  - `Build and Run Android Application`
+  - `Build and Run iOS Application`

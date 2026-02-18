@@ -14,21 +14,61 @@ This is a Kotlin Multiplatform project targeting Android, iOS.
 
 ### Build and Run Android Application
 
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
+To build and run the development version of the Android app:
+
+1. Build debug APK
+   ```bash
+   ./gradlew :composeApp:assembleDebug
+   ```
+2. Install/run from Android Studio device selector, or:
+   ```bash
+   ./gradlew :composeApp:installDebug
+   ```
+
+Optional full module verification:
+```bash
+./gradlew :composeApp:assembleDebug :composeApp:compileKotlinIosSimulatorArm64
+```
 
 ### Build and Run iOS Application
 
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+You can run iOS either from Xcode UI or terminal.
+
+#### Xcode flow
+
+1. Open [/iosApp](./iosApp) in Xcode.
+2. Select `iosApp` scheme.
+3. Pick an iOS Simulator device.
+4. Run.
+
+#### Terminal flow
+
+1. Build for simulator
+   ```bash
+   xcodebuild \
+     -project iosApp/iosApp.xcodeproj \
+     -scheme iosApp \
+     -configuration Debug \
+     -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.2' \
+     build
+   ```
+2. Boot simulator and open Simulator app
+   ```bash
+   xcrun simctl list devices available
+   DEVICE_ID="$(xcrun simctl list devices available | grep 'iPhone 16 (' | head -n 1 | sed -E 's/.*\\(([A-F0-9-]+)\\).*/\\1/')"
+   xcrun simctl boot "$DEVICE_ID" || true
+   open -a Simulator
+   ```
+3. Install and launch app
+   ```bash
+   APP_PATH="$(find ~/Library/Developer/Xcode/DerivedData -path '*Build/Products/Debug-iphonesimulator/IndianMetro.app' | head -n 1)"
+   xcrun simctl install "$DEVICE_ID" "$APP_PATH"
+   xcrun simctl launch "$DEVICE_ID" com.thefallendeveloper.indianmetro.IndianMetro
+   ```
+4. Verify process is running
+   ```bash
+   xcrun simctl spawn "$DEVICE_ID" launchctl list | grep 'UIKitApplication:com.thefallendeveloper.indianmetro.IndianMetro'
+   ```
 
 ---
 
