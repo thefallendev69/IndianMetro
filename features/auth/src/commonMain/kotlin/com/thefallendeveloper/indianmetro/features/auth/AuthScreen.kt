@@ -26,7 +26,6 @@ fun AuthRoute(
     FeatureNavigatorSubscription(
         navHostController = navController,
         featureNavigator = featureNavigator,
-        routeMapper = { route -> route.route },
     )
 
     NavHost(
@@ -51,7 +50,7 @@ fun AuthRoute(
                     .arguments
                     ?.read { getStringOrNull(AuthNavigationRoutes.OTP_ENTRY_ARGUMENT) }
                     ?: return@composable
-            val otpEntryArgs: OtpEntryArgs = AuthNavigationRoutes.PhoneEntry.decodeArgs(encodedArgs)
+            val otpEntryArgs: OtpEntryArgs = decodeArgs(encodedArgs)
             AuthOtpScreen(
                 viewModel =
                     koinViewModel(

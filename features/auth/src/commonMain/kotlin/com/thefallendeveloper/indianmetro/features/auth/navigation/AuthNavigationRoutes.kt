@@ -11,8 +11,8 @@ sealed class AuthNavigationRoutes(
     data class OtpEntry(
         val args: OtpEntryArgs,
     ) : AuthNavigationRoutes(
-            route = "otpEntry/${PhoneEntry.encodeArgs(args)}",
-        )
+        route = "otpEntry/${encodeArgs(args)}",
+    )
 
     companion object {
         const val OTP_ENTRY_ARGUMENT = "otpArgs"

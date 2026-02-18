@@ -9,13 +9,13 @@ abstract class BaseRoute(
 )
 
 @OptIn(ExperimentalEncodingApi::class)
-inline fun <reified T> BaseRoute.encodeArgs(args: T): String {
+inline fun <reified T> encodeArgs(args: T): String {
     val json = Json.encodeToString(args)
     return Base64.UrlSafe.encode(json.encodeToByteArray())
 }
 
 @OptIn(ExperimentalEncodingApi::class)
-inline fun <reified T> BaseRoute.decodeArgs(encodedArgs: String): T {
+inline fun <reified T> decodeArgs(encodedArgs: String): T {
     val json = Base64.UrlSafe.decode(encodedArgs).decodeToString()
     return Json.decodeFromString(json)
 }

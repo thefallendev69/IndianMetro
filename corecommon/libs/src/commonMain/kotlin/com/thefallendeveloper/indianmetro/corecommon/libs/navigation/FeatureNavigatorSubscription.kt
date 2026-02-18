@@ -3,16 +3,16 @@ package com.thefallendeveloper.indianmetro.corecommon.libs.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
+import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.routes.BaseRoute
 
 @Composable
-fun <Route> FeatureNavigatorSubscription(
+fun FeatureNavigatorSubscription(
     navHostController: NavHostController,
-    featureNavigator: FeatureNavigator<Route>,
-    routeMapper: (Route) -> String,
+    featureNavigator: FeatureNavigator<out BaseRoute>,
 ) {
     LaunchedEffect(featureNavigator, navHostController) {
         featureNavigator.destination.collect { route ->
-            navHostController.navigate(routeMapper(route)) {
+            navHostController.navigate(route.route) {
                 launchSingleTop = true
             }
         }

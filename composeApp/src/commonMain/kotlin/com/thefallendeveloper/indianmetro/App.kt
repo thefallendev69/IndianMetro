@@ -44,12 +44,6 @@ import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
-private object AppNavRoute {
-    const val AUTH = "auth"
-    const val ONBOARDING = "onboarding"
-    const val DONE = "done"
-}
-
 @Composable
 @Preview
 fun App() {
@@ -61,38 +55,32 @@ fun App() {
         FeatureNavigatorSubscription(
             navHostController = navController,
             featureNavigator = appNavigator,
-            routeMapper = { appRoute ->
-                when (appRoute) {
-                    AppRoutes.Auth -> AppNavRoute.AUTH
-                    AppRoutes.AppOnboarding -> AppNavRoute.ONBOARDING
-                }
-            },
         )
 
         NavHost(
             navController = navController,
-            startDestination = AppNavRoute.AUTH,
+            startDestination = AppRoutes.Auth.route,
         ) {
-            composable(AppNavRoute.AUTH) {
+            composable(AppRoutes.Auth.route) {
                 AuthRoute()
             }
 
-            composable(AppNavRoute.ONBOARDING) {
+            composable(AppRoutes.AppOnboarding.route) {
                 OnboardingScreen(
                     state = onboardingState,
                     onFirstNameChanged = { onboardingState = onboardingState.copy(firstName = it) },
                     onLastNameChanged = { onboardingState = onboardingState.copy(lastName = it) },
                     onEmailChanged = { onboardingState = onboardingState.copy(email = it) },
-                    onCreateAccount = { navController.navigate(AppNavRoute.DONE) },
+                    onCreateAccount = { navController.navigate(AppRoutes.Done.route) },
                 )
             }
 
-            composable(AppNavRoute.DONE) {
+            composable(AppRoutes.Done.route) {
                 SuccessScreen(
                     fullName = "${onboardingState.firstName} ${onboardingState.lastName}".trim(),
                     onRestart = {
                         onboardingState = OnboardingUiState()
-                        navController.navigate(AppNavRoute.AUTH) {
+                        navController.navigate(AppRoutes.Auth.route) {
                             popUpTo(navController.graph.id) { inclusive = true }
                             launchSingleTop = true
                         }
