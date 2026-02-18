@@ -41,7 +41,7 @@ kotlin {
         }
 
         androidUnitTest.dependencies {
-            implementation(projects.baseUnitTests)
+            implementation(projects.corecommon.baseUnitTests)
             runtimeOnly(libs.junit5.engine)
             runtimeOnly(libs.junit5.launcher)
         }

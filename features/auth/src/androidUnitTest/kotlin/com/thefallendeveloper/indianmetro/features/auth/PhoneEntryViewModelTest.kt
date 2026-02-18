@@ -12,21 +12,23 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class PhoneEntryViewModelTest : BaseTest() {
-    @Test
-    fun initialState_isEmptyAndContinueIsNotClickable() {
-        val featureNavigator = mockk<FeatureNavigator<AuthNavigationRoutes>>(relaxed = true)
-        val viewModel = createViewModel(featureNavigator)
+    private lateinit var featureNavigator: FeatureNavigator<AuthNavigationRoutes>
+    private lateinit var viewModel: PhoneEntryViewModel
 
+    override fun doBeforeEachTest() {
+        featureNavigator = mockk(relaxed = true)
+        viewModel = createViewModel(featureNavigator)
+    }
+
+    @Test
+    fun initialStateIsEmptyAndContinueIsNotClickable() {
         assertEquals("", viewModel.state.value.phoneNumber)
         assertFalse(viewModel.state.value.continueClickable)
     }
 
     @Test
-    fun phoneNumberChanged_filtersNonDigitsAndCapsLengthToTen() =
+    fun phoneNumberChangedFiltersNonDigitsAndCapsLengthToTen() =
         runTest {
-            val featureNavigator = mockk<FeatureNavigator<AuthNavigationRoutes>>(relaxed = true)
-            val viewModel = createViewModel(featureNavigator)
-
             viewModel.emitEvent(PhoneEntryViewModel.Event.PhoneNumberChanged("12a34-5678909"))
             testScheduler.runCurrent()
 
@@ -35,11 +37,8 @@ class PhoneEntryViewModelTest : BaseTest() {
         }
 
     @Test
-    fun continueClicked_withInvalidPhoneNumber_doesNotNavigate() =
+    fun continueClickedWithInvalidPhoneNumberDoesNotNavigate() =
         runTest {
-            val featureNavigator = mockk<FeatureNavigator<AuthNavigationRoutes>>(relaxed = true)
-            val viewModel = createViewModel(featureNavigator)
-
             viewModel.emitEvent(PhoneEntryViewModel.Event.ContinueClicked)
             testScheduler.runCurrent()
 
@@ -47,11 +46,8 @@ class PhoneEntryViewModelTest : BaseTest() {
         }
 
     @Test
-    fun continueClicked_withValidPhoneNumber_navigatesToOtpEntry() =
+    fun continueClickedWithValidPhoneNumberNavigatesToOtpEntry() =
         runTest {
-            val featureNavigator = mockk<FeatureNavigator<AuthNavigationRoutes>>(relaxed = true)
-            val viewModel = createViewModel(featureNavigator)
-
             viewModel.emitEvent(PhoneEntryViewModel.Event.PhoneNumberChanged("1234567890"))
             testScheduler.runCurrent()
             viewModel.emitEvent(PhoneEntryViewModel.Event.ContinueClicked)

@@ -12,22 +12,24 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class OtpEntryViewModelTest : BaseTest() {
-    @Test
-    fun initialState_setsPhoneNumberAndKeepsOtpEmpty() {
-        val appNavigator = mockk<FeatureNavigator<AppRoutes>>(relaxed = true)
-        val viewModel = createViewModel(appNavigator)
+    private lateinit var appNavigator: FeatureNavigator<AppRoutes>
+    private lateinit var viewModel: OtpEntryViewModel
 
+    override fun doBeforeEachTest() {
+        appNavigator = mockk(relaxed = true)
+        viewModel = createViewModel(appNavigator)
+    }
+
+    @Test
+    fun initialStateSetsPhoneNumberAndKeepsOtpEmpty() {
         assertEquals(TEST_PHONE_NUMBER, viewModel.state.value.phoneNumber)
         assertEquals("", viewModel.state.value.otp)
         assertFalse(viewModel.state.value.verifyClickable)
     }
 
     @Test
-    fun otpChanged_filtersNonDigitsAndCapsLengthToSix() =
+    fun otpChangedFiltersNonDigitsAndCapsLengthToSix() =
         runTest {
-            val appNavigator = mockk<FeatureNavigator<AppRoutes>>(relaxed = true)
-            val viewModel = createViewModel(appNavigator)
-
             viewModel.emitEvent(OtpEntryViewModel.Event.OtpChanged("12a345678"))
             testScheduler.runCurrent()
 
@@ -36,11 +38,8 @@ class OtpEntryViewModelTest : BaseTest() {
         }
 
     @Test
-    fun resendClicked_clearsOtpValue() =
+    fun resendClickedClearsOtpValue() =
         runTest {
-            val appNavigator = mockk<FeatureNavigator<AppRoutes>>(relaxed = true)
-            val viewModel = createViewModel(appNavigator)
-
             viewModel.emitEvent(OtpEntryViewModel.Event.OtpChanged("123456"))
             testScheduler.runCurrent()
             viewModel.emitEvent(OtpEntryViewModel.Event.ResendClicked)
@@ -51,11 +50,8 @@ class OtpEntryViewModelTest : BaseTest() {
         }
 
     @Test
-    fun verifyClicked_withInvalidOtp_doesNotNavigate() =
+    fun verifyClickedWithInvalidOtpDoesNotNavigate() =
         runTest {
-            val appNavigator = mockk<FeatureNavigator<AppRoutes>>(relaxed = true)
-            val viewModel = createViewModel(appNavigator)
-
             viewModel.emitEvent(OtpEntryViewModel.Event.VerifyClicked)
             testScheduler.runCurrent()
 
@@ -63,11 +59,8 @@ class OtpEntryViewModelTest : BaseTest() {
         }
 
     @Test
-    fun verifyClicked_withValidOtp_navigatesToOnboarding() =
+    fun verifyClickedWithValidOtpNavigatesToOnboarding() =
         runTest {
-            val appNavigator = mockk<FeatureNavigator<AppRoutes>>(relaxed = true)
-            val viewModel = createViewModel(appNavigator)
-
             viewModel.emitEvent(OtpEntryViewModel.Event.OtpChanged("123456"))
             testScheduler.runCurrent()
             viewModel.emitEvent(OtpEntryViewModel.Event.VerifyClicked)
