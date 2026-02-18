@@ -6,8 +6,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 
 abstract class BaseTest {
     protected val testDispatcher = StandardTestDispatcher()
@@ -17,15 +15,13 @@ abstract class BaseTest {
     protected open fun doAfterEachTest() = Unit
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    @BeforeEach
-    fun setUpDispatcher() {
+    protected fun setUpBaseTest() {
         Dispatchers.setMain(testDispatcher)
         doBeforeEachTest()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    @AfterEach
-    fun tearDownDispatcher() {
+    protected fun tearDownBaseTest() {
         doAfterEachTest()
         clearAllMocks()
         Dispatchers.resetMain()

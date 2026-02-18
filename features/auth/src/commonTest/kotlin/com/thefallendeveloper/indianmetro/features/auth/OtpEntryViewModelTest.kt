@@ -3,20 +3,34 @@ package com.thefallendeveloper.indianmetro.features.auth
 import com.thefallendeveloper.indianmetro.baseunittests.BaseTest
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.routes.AppRoutes
-import io.mockk.mockk
+import io.mockk.MockKAnnotations
+import io.mockk.impl.annotations.MockK
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class OtpEntryViewModelTest : BaseTest() {
+    @MockK(relaxed = true)
     private lateinit var appNavigator: FeatureNavigator<AppRoutes>
     private lateinit var viewModel: OtpEntryViewModel
 
+    @BeforeTest
+    fun setUp() {
+        setUpBaseTest()
+    }
+
+    @AfterTest
+    fun tearDown() {
+        tearDownBaseTest()
+    }
+
     override fun doBeforeEachTest() {
-        appNavigator = mockk(relaxed = true)
+        MockKAnnotations.init(this)
         viewModel = createViewModel(appNavigator)
     }
 

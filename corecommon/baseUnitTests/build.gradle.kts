@@ -1,19 +1,28 @@
+import org.gradle.api.tasks.testing.Test
+
 plugins {
-    alias(libs.plugins.kotlinJvm)
+    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.indianmetroLintConventions)
 }
 
 kotlin {
+    jvm()
+
     jvmToolchain(11)
+
+    sourceSets {
+        commonMain.dependencies {
+            api(libs.kotlinx.coroutines.test)
+            api(libs.mockk)
+            api(libs.kotlin.test)
+        }
+        jvmTest.dependencies {
+            implementation(libs.junit5.api)
+            runtimeOnly(libs.junit5.engine)
+        }
+    }
 }
 
-dependencies {
-    api(libs.junit5.api)
-    api(libs.mockk)
-    api(libs.kotlinx.coroutines.test)
-    testRuntimeOnly(libs.junit5.engine)
-}
-
-tasks.test {
+tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }

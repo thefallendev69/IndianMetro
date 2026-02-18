@@ -40,10 +40,9 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
         }
 
-        androidUnitTest.dependencies {
+        commonTest.dependencies {
             implementation(projects.corecommon.baseUnitTests)
-            runtimeOnly(libs.junit5.engine)
-            runtimeOnly(libs.junit5.launcher)
+            implementation(libs.kotlin.test)
         }
     }
 }
@@ -65,11 +64,5 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    testOptions {
-        unitTests.all {
-            it.useJUnitPlatform()
-        }
     }
 }
