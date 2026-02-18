@@ -3,6 +3,7 @@ package com.thefallendeveloper.indianmetro.features.auth
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.AppNavigator
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.featureNavigatorModule
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.routes.AppRoutes
+import com.thefallendeveloper.indianmetro.corecommon.libs.providers.coroutineDispatchersModule
 import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigationRoutes
 import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigator
 import org.koin.core.module.Module
@@ -11,13 +12,20 @@ import org.koin.dsl.module
 
 val authModule: Module =
     module {
+        includes(coroutineDispatchersModule)
         includes(featureNavigatorModule<AuthNavigationRoutes>(named<AuthNavigator>()))
         includes(featureNavigatorModule<AppRoutes>(named<AppNavigator>()))
-        factory { PhoneEntryViewModel(featureNavigator = get(named<AuthNavigator>())) }
+        factory {
+            PhoneEntryViewModel(
+                featureNavigator = get(named<AuthNavigator>()),
+                coroutineDispatchersProvider = get(),
+            )
+        }
         factory { (phoneNumber: String) ->
             OtpEntryViewModel(
                 phoneNumber = phoneNumber,
                 appNavigator = get(named<AppNavigator>()),
+                coroutineDispatchersProvider = get(),
             )
         }
     }

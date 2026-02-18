@@ -31,6 +31,7 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
+include(":baseUnitTests")
 include(":corecommon")
 include(":corecommon:designsystem")
 include(":corecommon:libs")

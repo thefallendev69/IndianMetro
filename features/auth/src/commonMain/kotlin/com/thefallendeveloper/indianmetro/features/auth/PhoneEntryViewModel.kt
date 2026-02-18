@@ -3,6 +3,7 @@ package com.thefallendeveloper.indianmetro.features.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
+import com.thefallendeveloper.indianmetro.corecommon.libs.providers.ICoroutineDispatchersProvider
 import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigationRoutes
 import com.thefallendeveloper.indianmetro.features.auth.navigation.OtpEntryArgs
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 
 class PhoneEntryViewModel(
     private val featureNavigator: FeatureNavigator<AuthNavigationRoutes>,
+    private val coroutineDispatchersProvider: ICoroutineDispatchersProvider,
 ) : ViewModel() {
     private val events = MutableSharedFlow<Event>()
 
@@ -31,7 +33,7 @@ class PhoneEntryViewModel(
             )
 
     fun emitEvent(event: Event) {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineDispatchersProvider.mainImmediate) {
             events.emit(event)
             if (event == Event.ContinueClicked && state.value.continueClickable) {
                 featureNavigator.navigateTo(

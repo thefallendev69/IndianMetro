@@ -3,7 +3,8 @@
 ## Overview
 - Kotlin Multiplatform project with Compose Multiplatform UI.
 - App module: `composeApp`
-- Shared UI/design module: `designsystem`
+- Shared UI/design module: `corecommon/designsystem`
+- Shared base test module: `baseUnitTests` (JUnit5 + MockK test foundation)
 - Feature modules: `features/auth`, `features/onboarding`
 - iOS host app: `iosApp`
 - Build logic plugin module: `build-logic/linting`
