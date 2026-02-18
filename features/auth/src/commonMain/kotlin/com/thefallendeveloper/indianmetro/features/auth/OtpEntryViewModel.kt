@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class OtpEntryViewModel(
+    private val phoneNumber: String,
     private val appNavigator: FeatureNavigator<AppRoutes>,
 ) : ViewModel() {
     private val events = MutableSharedFlow<Event>()
@@ -50,6 +51,7 @@ class OtpEntryViewModel(
     }
 
     data class State(
+        val phoneNumber: String,
         val otp: String,
     ) {
         val verifyClickable: Boolean
@@ -58,6 +60,7 @@ class OtpEntryViewModel(
 
     private fun initState() =
         State(
+            phoneNumber = phoneNumber,
             otp = "",
         )
 

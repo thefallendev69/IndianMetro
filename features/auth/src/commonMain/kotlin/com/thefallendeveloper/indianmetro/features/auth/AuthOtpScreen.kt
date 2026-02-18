@@ -38,7 +38,6 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AuthOtpScreen(
-    _phoneNumber: String,
     viewModel: OtpEntryViewModel,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()

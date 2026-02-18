@@ -26,6 +26,7 @@ kotlin {
             implementation(libs.jetbrains.navigation.compose)
             implementation(libs.io.koin.common)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
         }
     }
 }
