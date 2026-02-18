@@ -87,7 +87,6 @@ class OtpEntryViewModelTest : BaseTest() {
         OtpEntryViewModel(
             phoneNumber = TEST_PHONE_NUMBER,
             appNavigator = appNavigator,
-            coroutineDispatchersProvider = TestCoroutineDispatchersProvider(testDispatcher),
         )
 
     private companion object {

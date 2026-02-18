@@ -79,6 +79,5 @@ class PhoneEntryViewModelTest : BaseTest() {
     private fun createViewModel(featureNavigator: FeatureNavigator<AuthNavigationRoutes>): PhoneEntryViewModel =
         PhoneEntryViewModel(
             featureNavigator = featureNavigator,
-            coroutineDispatchersProvider = TestCoroutineDispatchersProvider(testDispatcher),
         )
 }

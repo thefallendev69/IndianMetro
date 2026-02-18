@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.routes.AppRoutes
-import com.thefallendeveloper.indianmetro.corecommon.libs.providers.ICoroutineDispatchersProvider
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +14,6 @@ import kotlinx.coroutines.launch
 class OtpEntryViewModel(
     private val phoneNumber: String,
     private val appNavigator: FeatureNavigator<AppRoutes>,
-    private val coroutineDispatchersProvider: ICoroutineDispatchersProvider,
 ) : ViewModel() {
     private val events = MutableSharedFlow<Event>()
 
@@ -34,7 +32,7 @@ class OtpEntryViewModel(
             )
 
     fun emitEvent(event: Event) {
-        viewModelScope.launch(coroutineDispatchersProvider.mainImmediate) {
+        viewModelScope.launch {
             events.emit(event)
             if (event == Event.VerifyClicked && state.value.verifyClickable) {
                 appNavigator.navigateTo(AppRoutes.AppOnboarding)
