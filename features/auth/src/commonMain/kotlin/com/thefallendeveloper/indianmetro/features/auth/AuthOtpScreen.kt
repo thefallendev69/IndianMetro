@@ -35,11 +35,11 @@ import indianmetro.features.auth.generated.resources.auth_verify_otp
 import indianmetro.features.auth.generated.resources.auth_verify_otp_subtitle
 import indianmetro.features.auth.generated.resources.auth_verify_otp_title
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AuthOtpScreen(
-    viewModel: OtpEntryViewModel = koinViewModel(key = "otp-entry-view-model"),
+    _phoneNumber: String,
+    viewModel: OtpEntryViewModel,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 

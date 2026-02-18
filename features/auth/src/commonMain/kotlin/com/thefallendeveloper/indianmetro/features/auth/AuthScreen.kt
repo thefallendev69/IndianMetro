@@ -30,10 +30,30 @@ fun AuthRoute(
         startDestination = AuthNavigationRoutes.PhoneEntry.route,
     ) {
         composable(AuthNavigationRoutes.PhoneEntry.route) {
-            AuthPhoneEntryScreen()
+            AuthPhoneEntryScreen(
+                viewModel = koinViewModel(key = "phone-entry-view-model"),
+            )
         }
-        composable(route = AuthNavigationRoutes.OtpEntry.route) { backStackEntry ->
-            AuthOtpScreen()
+
+        composable(
+            route = AuthNavigationRoutes.OTP_ENTRY_ROUTE_PATTERN,
+            arguments =
+                listOf(
+                    navArgument(AuthNavigationRoutes.OTP_ENTRY_ARGUMENT) {
+                        type = NavType.StringType
+                    },
+                ),
+        ) { backStackEntry ->
+            val encodedArgs =
+                backStackEntry
+                    .arguments
+                    ?.getString(AuthNavigationRoutes.OTP_ENTRY_ARGUMENT)
+                    ?: return@composable
+            val otpEntryArgs = AuthNavigationRoutes.decodeArgs(encodedArgs)
+            AuthOtpScreen(
+                _phoneNumber = otpEntryArgs.phoneNumber,
+                viewModel = koinViewModel(key = "otp-entry-view-model-${otpEntryArgs.phoneNumber}"),
+            )
         }
     }
 }
