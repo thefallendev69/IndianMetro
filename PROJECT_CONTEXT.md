@@ -17,6 +17,7 @@
 - Architecture reference docs:
   - `docs/ARCHITECTURE_GUIDELINES.md`
   - `docs/CORECOMMON_USAGE.md`
+  - `docs/TASK_COMPLETION_GUIDELINES.md`
 
 ## Conventions
 - Base package: `com.thefallendeveloper.indianmetro`
