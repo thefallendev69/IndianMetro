@@ -68,6 +68,10 @@ Include:
 3. Verification commands executed.
 4. Test/lint/build outcome.
 5. Any known limitations or follow-up items.
+6. Title format prefix `[AGENT PR]` where `AGENT` is the raising agent name.
+
+For this repository when raised by Codex:
+- PR title must start with `[CODEX PR]`.
 
 ## PR Comment Resolution Flow
 When a PR receives review comments:

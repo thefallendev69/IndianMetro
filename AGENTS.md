@@ -24,6 +24,7 @@ Task completion flow:
 - Plan the work and split into sub-tasks when needed.
 - For each sub-task, apply the autonomous workflow above.
 - When all checks are green, push and raise a pull request targeting `main`.
+- PR title format must start with `[CODEX PR]`.
 
 PR comment handling flow:
 - Read all PR comments and make sense of requested changes before editing code.
