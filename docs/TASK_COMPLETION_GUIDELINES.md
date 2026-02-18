@@ -69,6 +69,17 @@ Include:
 4. Test/lint/build outcome.
 5. Any known limitations or follow-up items.
 
+## PR Comment Resolution Flow
+When a PR receives review comments:
+1. Read all comments and convert them into actionable change items.
+2. Pull latest `main` into the current feature branch before applying comment fixes.
+3. If conflicts occur, resolve them when safely possible.
+4. If conflicts are not safely resolvable, escalate to a human for conflict resolution.
+5. Apply fixes for each comment on the updated branch.
+6. If a comment cannot be resolved, reply on that comment with the blocker and reasoning.
+7. Re-run verification steps after comment fixes.
+8. Push updated commits and notify human reviewer for re-review.
+
 ## Definition of Done
 A task is done only when:
 1. EndGoal is achieved.
