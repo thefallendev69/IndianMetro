@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -72,6 +73,11 @@ android {
     testOptions {
         unitTests.all {
             it.useJUnitPlatform()
+            it.testLogging.events(
+                TestLogEvent.PASSED,
+                TestLogEvent.SKIPPED,
+                TestLogEvent.FAILED,
+            )
         }
     }
 }

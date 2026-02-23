@@ -7,10 +7,10 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 
+@OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseTest(
     body: BaseTest.() -> Unit = {},
 ) : FunSpec() {
-    @OptIn(ExperimentalCoroutinesApi::class)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     init {
