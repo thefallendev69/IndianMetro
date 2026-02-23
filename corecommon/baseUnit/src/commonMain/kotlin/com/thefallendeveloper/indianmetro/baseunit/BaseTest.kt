@@ -1,6 +1,25 @@
 package com.thefallendeveloper.indianmetro.baseunit
 
-abstract class BaseTest {
-    // Intentionally empty for now.
-    // Test dependencies/utilities will be introduced in a follow-up PR.
+import io.kotest.core.spec.style.FunSpec
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+
+abstract class BaseTest(
+    body: BaseTest.() -> Unit = {},
+) : FunSpec() {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val testDispatcher = UnconfinedTestDispatcher()
+
+    init {
+        beforeTest {
+            Dispatchers.setMain(testDispatcher)
+        }
+        afterTest {
+            Dispatchers.resetMain()
+        }
+        body()
+    }
 }

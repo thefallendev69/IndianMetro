@@ -8,4 +8,18 @@ kotlin {
     jvm()
 
     jvmToolchain(11)
+
+    sourceSets {
+        commonMain.dependencies {
+            api(libs.kotlin.test)
+            api(libs.kotlinx.coroutines.test)
+            api(libs.turbine)
+            api(libs.kotest.assertions.core)
+            api(libs.kotest.framework.engine)
+        }
+
+        jvmMain.dependencies {
+            api(libs.kotest.runner.junit5)
+        }
+    }
 }

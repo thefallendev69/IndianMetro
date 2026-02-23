@@ -25,6 +25,7 @@
 ## Conventions
 - Base package: `com.thefallendeveloper.indianmetro`
 - Linting uses ktlint and detekt via build-logic convention plugins.
+- Unit testing stack uses Kotest; coverage uses Kover.
 - Prefer string resources over hardcoded UI strings.
 - Always use SCREAMING_SNAKE_CASE for constants.
 - If a file contains only one class, the filename must match the class name.
