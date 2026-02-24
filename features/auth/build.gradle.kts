@@ -50,5 +50,4 @@ android {
                 .get()
                 .toInt()
     }
-
 }
