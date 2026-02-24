@@ -6,14 +6,11 @@ import com.thefallendeveloper.indianmetro.corecommon.basetest.BaseTest
 import com.thefallendeveloper.indianmetro.corecommon.basetest.BaseTestSupport
 import com.thefallendeveloper.indianmetro.corecommon.basetest.CoroutineTest
 import com.thefallendeveloper.indianmetro.corecommon.basetest.CoroutineSupport
-import com.thefallendeveloper.indianmetro.corecommon.basetest.ManagedTestLifecycle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
-import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -22,28 +19,21 @@ import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class OtpEntryViewModelTests :
-    ManagedTestLifecycle,
+    ManagedTestLifecycleHooks,
     CoroutineSupport by CoroutineTest(),
     BaseTestSupport by BaseTest() {
     private lateinit var appNavigator: FeatureNavigator<AppRoutes>
+    private lateinit var viewModel: OtpEntryViewModel
 
     @BeforeTest
     fun setUp() {
-        beforeManagedTestLifecycle()
         appNavigator = FeatureNavigator()
-    }
-
-    @AfterTest
-    fun tearDown() {
-        afterManagedTestLifecycle()
+        viewModel = createViewModel()
     }
 
     @Test
     fun initialStateContainsPhoneAndEmptyOtp() =
         runTest {
-            val viewModel =
-                OtpEntryViewModel(phoneNumber = TEST_PHONE_NUMBER, appNavigator = appNavigator)
-
             assertEquals(TEST_PHONE_NUMBER, viewModel.state.value.phoneNumber)
             assertEquals("", viewModel.state.value.otp)
             assertFalse(viewModel.state.value.verifyClickable)
@@ -52,58 +42,49 @@ class OtpEntryViewModelTests :
     @Test
     fun otpChangedFiltersNonDigitsAndLimitsLengthToSix() =
         runTest {
-            val viewModel =
-                OtpEntryViewModel(phoneNumber = TEST_PHONE_NUMBER, appNavigator = appNavigator)
-
             viewModel.emitEvent(OtpEntryViewModel.Event.OtpChanged("12a345678"))
-
-            assertEquals("123456", viewModel.state.value.otp)
-            assertTrue(viewModel.state.value.verifyClickable)
+            val updatedState = viewModel.state.first { it.otp == "123456" }
+            assertEquals("123456", updatedState.otp)
+            assertTrue(updatedState.verifyClickable)
         }
 
     @Test
     fun verifyClickedWithInvalidOtpDoesNotNavigate() =
         runTest {
-            val viewModel =
-                OtpEntryViewModel(phoneNumber = TEST_PHONE_NUMBER, appNavigator = appNavigator)
-            val emittedRoutes = mutableListOf<AppRoutes>()
-            val collectJob =
-                launch {
-                    appNavigator.destination.collect { route ->
-                        emittedRoutes += route
-                    }
-                }
-
+            val emittedRouteDeferred =
+                async(start = CoroutineStart.UNDISPATCHED) { appNavigator.destination.first() }
             viewModel.emitEvent(OtpEntryViewModel.Event.VerifyClicked)
-
-            assertEquals(emptyList(), emittedRoutes)
-            collectJob.cancel()
+            assertFalse(emittedRouteDeferred.isCompleted)
+            emittedRouteDeferred.cancel()
         }
 
     @Test
     fun verifyClickedWithValidOtpNavigatesToOnboarding() =
         runTest {
-            val viewModel = OtpEntryViewModel(phoneNumber = TEST_PHONE_NUMBER, appNavigator = appNavigator)
-            val emittedRoute= appNavigator.destination.first()
-
+            val emittedRouteDeferred =
+                async(start = CoroutineStart.UNDISPATCHED) { appNavigator.destination.first() }
             viewModel.emitEvent(OtpEntryViewModel.Event.OtpChanged("123456"))
+            viewModel.state.first { it.verifyClickable }
             viewModel.emitEvent(OtpEntryViewModel.Event.VerifyClicked)
-
-            assertEquals(AppRoutes.AppOnboarding, emittedRoute)
+            assertEquals(AppRoutes.AppOnboarding, emittedRouteDeferred.await())
         }
 
     @Test
     fun resendClickedClearsOtp() =
         runTest {
-            val viewModel =
-                OtpEntryViewModel(phoneNumber = TEST_PHONE_NUMBER, appNavigator = appNavigator)
-
             viewModel.emitEvent(OtpEntryViewModel.Event.OtpChanged("123456"))
+            viewModel.state.first { it.otp == "123456" }
             viewModel.emitEvent(OtpEntryViewModel.Event.ResendClicked)
-
-            assertEquals("", viewModel.state.value.otp)
-            assertFalse(viewModel.state.value.verifyClickable)
+            val resetState = viewModel.state.first { it.otp == "" }
+            assertEquals("", resetState.otp)
+            assertFalse(resetState.verifyClickable)
         }
+
+    private fun createViewModel() =
+        OtpEntryViewModel(
+            phoneNumber = TEST_PHONE_NUMBER,
+            appNavigator = appNavigator,
+        )
 
     private companion object {
         const val TEST_PHONE_NUMBER = "9999999999"
