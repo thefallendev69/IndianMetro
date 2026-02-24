@@ -50,7 +50,6 @@ class OtpEntryViewModelTests :
 
     @BeforeTest
     fun setUp() {
-        setUpManagedTestLifecycle()
         startKoinForTest(otpEntryViewModelTestModule)
         appNavigator = get(qualifier = named<AppNavigator>())
         viewModel = get { parametersOf(TEST_PHONE_NUMBER) }
@@ -59,7 +58,6 @@ class OtpEntryViewModelTests :
     @AfterTest
     fun tearDown() {
         stopKoinForTest()
-        tearDownManagedTestLifecycle()
     }
 
     @Test

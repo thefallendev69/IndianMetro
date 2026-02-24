@@ -44,7 +44,6 @@ class PhoneEntryViewModelTests :
 
     @BeforeTest
     fun setUp() {
-        setUpManagedTestLifecycle()
         startKoinForTest(phoneEntryViewModelTestModule)
         featureNavigator = get(qualifier = named<AuthNavigator>())
         viewModel = get()
@@ -53,7 +52,6 @@ class PhoneEntryViewModelTests :
     @AfterTest
     fun tearDown() {
         stopKoinForTest()
-        tearDownManagedTestLifecycle()
     }
 
     @Test
