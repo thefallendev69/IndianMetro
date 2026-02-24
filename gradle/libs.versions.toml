@@ -21,6 +21,7 @@ serialization = "1.9.0"
 ktlint = "14.0.1"
 detekt = "1.23.8"
 navigation = "2.9.2"
+mokkery = "3.0.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -43,6 +44,8 @@ io-koin-android = { group = "io.insert-koin", name = "koin-android", version.ref
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 jetbrains-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation" }
+mokkery-runtime = { module = "dev.mokkery:mokkery-runtime", version.ref = "mokkery" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -57,3 +60,4 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 indianmetroLintConventions = { id = "com.thefallendeveloper.indianmetro.lint-conventions" }
 indianmetroLintSuite = { id = "com.thefallendeveloper.indianmetro.lint-suite" }
 indianmetroJvmConfigConventions = { id = "com.thefallendeveloper.indianmetro.jvm-config-conventions" }
+mokkery = { id = "dev.mokkery", version.ref = "mokkery" }

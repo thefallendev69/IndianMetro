@@ -1,0 +1,49 @@
+/*
+ * Workaround for Android Studio injected Kotlin MPP logger init script
+ * (ijKotlinTestLogger*.gradle) that accesses:
+ *   testResult.getStartTimeMillis / testResult.getEndTimeMillis
+ * as Groovy properties.
+ *
+ * On newer Gradle versions this property does not exist on DefaultTestResult,
+ * which causes IDE test runs for Kotlin/Native targets to fail before user
+ * tests execute.
+ */
+
+def readResultTime = { target, methodNames ->
+    for (def methodName : methodNames) {
+        try {
+            def method = target.class.methods.find { it.name == methodName && it.parameterCount == 0 }
+            if (method != null) {
+                return method.invoke(target)
+            }
+        } catch (Throwable ignored) {
+        }
+
+        try {
+            return target."$methodName"
+        } catch (Throwable ignored) {
+        }
+    }
+    return 0L
+}
+
+try {
+    def defaultTestResultClass = Class.forName("org.gradle.api.internal.tasks.testing.results.DefaultTestResult")
+
+    defaultTestResultClass.metaClass.getGetStartTimeMillis = {
+        readResultTime(delegate, ["getStartTime", "startTime", "getStartTimeMillis"])
+    }
+    defaultTestResultClass.metaClass.getGetEndTimeMillis = {
+        readResultTime(delegate, ["getEndTime", "endTime", "getEndTimeMillis"])
+    }
+
+    // Also expose direct properties in case the caller resolves those names.
+    defaultTestResultClass.metaClass.getStartTimeMillis = {
+        readResultTime(delegate, ["getStartTime", "startTime", "getStartTimeMillis"])
+    }
+    defaultTestResultClass.metaClass.getEndTimeMillis = {
+        readResultTime(delegate, ["getEndTime", "endTime", "getEndTimeMillis"])
+    }
+} catch (Throwable ignored) {
+    // No-op. If class shape changes in future Gradle versions, we skip patching.
+}

@@ -8,3 +8,5 @@ plugins {
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.indianmetroLintSuite)
 }
+
+apply(from = "$rootDir/gradle/ij-kotlin-mpp-test-logger-workaround.gradle")
