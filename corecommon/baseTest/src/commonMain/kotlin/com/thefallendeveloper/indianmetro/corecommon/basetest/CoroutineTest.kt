@@ -4,18 +4,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 
-@OptIn(ExperimentalCoroutinesApi::class)
-open class BaseCoroutineTest {
-    protected val testDispatcher: TestDispatcher = StandardTestDispatcher()
+interface CoroutineSupport : BeforeTestSupport, AfterTestSupport
 
-    open fun setUpBaseCoroutineTest() {
+@OptIn(ExperimentalCoroutinesApi::class)
+class CoroutineTest(
+    private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher(),
+) : CoroutineSupport {
+    override fun beforeTest() {
         Dispatchers.setMain(testDispatcher)
     }
 
-    open fun tearDownBaseCoroutineTest() {
+    override fun afterTest() {
         Dispatchers.resetMain()
     }
 }
