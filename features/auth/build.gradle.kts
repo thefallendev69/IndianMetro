@@ -36,10 +36,9 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {
+            implementation(projects.corecommon.baseTest)
             implementation(libs.kotlin.test)
             implementation(kotlin("test-annotations-common"))
-            implementation(libs.mokkery.runtime)
-            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }
