@@ -18,6 +18,7 @@ kotlin {
         commonMain.dependencies {
             api(libs.kotlin.test)
             api(libs.kotlinx.coroutines.test)
+            api(libs.io.koin.test)
             api(libs.mokkery.runtime)
         }
     }

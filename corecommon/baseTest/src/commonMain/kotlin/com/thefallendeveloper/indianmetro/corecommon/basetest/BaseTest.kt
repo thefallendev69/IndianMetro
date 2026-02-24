@@ -7,7 +7,9 @@ interface BaseTestSupport {
     fun registerMocks(vararg mockInstances: Any)
 }
 
-class BaseTest : BaseTestSupport, AfterTestSupport {
+class BaseTest :
+    BaseTestSupport,
+    AfterTestSupport {
     private val mocks = mutableListOf<Any>()
 
     override fun registerMocks(vararg mockInstances: Any) {
@@ -16,9 +18,10 @@ class BaseTest : BaseTestSupport, AfterTestSupport {
 
     override fun afterTest() {
         if (mocks.isNotEmpty()) {
-            val mockArray = mocks.toTypedArray()
-            resetCalls(*mockArray)
-            resetAnswers(*mockArray)
+            mocks.forEach { mock ->
+                resetCalls(mock)
+                resetAnswers(mock)
+            }
             mocks.clear()
         }
     }

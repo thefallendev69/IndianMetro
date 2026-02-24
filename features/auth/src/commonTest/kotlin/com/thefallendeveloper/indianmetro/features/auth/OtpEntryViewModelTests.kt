@@ -1,34 +1,65 @@
 package com.thefallendeveloper.indianmetro.features.auth
 
-import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
-import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.routes.AppRoutes
 import com.thefallendeveloper.indianmetro.corecommon.basetest.BaseTest
 import com.thefallendeveloper.indianmetro.corecommon.basetest.BaseTestSupport
-import com.thefallendeveloper.indianmetro.corecommon.basetest.CoroutineTest
 import com.thefallendeveloper.indianmetro.corecommon.basetest.CoroutineSupport
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.thefallendeveloper.indianmetro.corecommon.basetest.CoroutineTest
+import com.thefallendeveloper.indianmetro.corecommon.basetest.KoinSupport
+import com.thefallendeveloper.indianmetro.corecommon.basetest.KoinTestSupport
+import com.thefallendeveloper.indianmetro.corecommon.basetest.ManagedTestLifecycleHooks
+import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.AppNavigator
+import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
+import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.routes.AppRoutes
 import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
+import org.koin.test.KoinTest
+import org.koin.test.get
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
+private val otpEntryViewModelTestModule =
+    module {
+        single(named<AppNavigator>()) { FeatureNavigator<AppRoutes>() }
+        factory { (phoneNumber: String) ->
+            OtpEntryViewModel(
+                phoneNumber = phoneNumber,
+                appNavigator = get(named<AppNavigator>()),
+            )
+        }
+    }
+
 @OptIn(ExperimentalCoroutinesApi::class)
 class OtpEntryViewModelTests :
+    KoinTest,
     ManagedTestLifecycleHooks,
     CoroutineSupport by CoroutineTest(),
+    KoinSupport by KoinTestSupport(),
     BaseTestSupport by BaseTest() {
     private lateinit var appNavigator: FeatureNavigator<AppRoutes>
     private lateinit var viewModel: OtpEntryViewModel
 
     @BeforeTest
     fun setUp() {
-        appNavigator = FeatureNavigator()
-        viewModel = createViewModel()
+        setUpManagedTestLifecycle()
+        startKoinForTest(otpEntryViewModelTestModule)
+        appNavigator = get(qualifier = named<AppNavigator>())
+        viewModel = get { parametersOf(TEST_PHONE_NUMBER) }
+    }
+
+    @AfterTest
+    fun tearDown() {
+        stopKoinForTest()
+        tearDownManagedTestLifecycle()
     }
 
     @Test
@@ -79,12 +110,6 @@ class OtpEntryViewModelTests :
             assertEquals("", resetState.otp)
             assertFalse(resetState.verifyClickable)
         }
-
-    private fun createViewModel() =
-        OtpEntryViewModel(
-            phoneNumber = TEST_PHONE_NUMBER,
-            appNavigator = appNavigator,
-        )
 
     private companion object {
         const val TEST_PHONE_NUMBER = "9999999999"

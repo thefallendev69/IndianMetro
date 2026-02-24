@@ -42,6 +42,7 @@ io-koin-common = { group = "io.insert-koin", name = "koin-core", version.ref = "
 io-koin-compose = { group = "io.insert-koin", name = "koin-compose", version.ref = "koin" }
 io-koin-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }
 io-koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+io-koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 jetbrains-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation" }
