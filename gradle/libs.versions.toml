@@ -56,3 +56,4 @@ ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 indianmetroLintConventions = { id = "com.thefallendeveloper.indianmetro.lint-conventions" }
 indianmetroLintSuite = { id = "com.thefallendeveloper.indianmetro.lint-suite" }
+indianmetroJvmConfigConventions = { id = "com.thefallendeveloper.indianmetro.jvm-config-conventions" }

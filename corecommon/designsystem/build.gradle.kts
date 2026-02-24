@@ -5,7 +5,6 @@ import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
@@ -14,6 +13,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.indianmetroLintConventions)
+    alias(libs.plugins.indianmetroJvmConfigConventions)
 }
 
 abstract class GenerateDesignTokensTask : DefaultTask() {
@@ -281,11 +281,7 @@ val generateDesignTokens =
     }
 
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
-        }
-    }
+    androidTarget()
 
     listOf(
         iosArm64(),
@@ -330,8 +326,4 @@ android {
                 .toInt()
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
 }

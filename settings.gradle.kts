@@ -3,6 +3,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
     includeBuild("build-logic/linting")
+    includeBuild("build-logic/configs")
 
     repositories {
         google {
