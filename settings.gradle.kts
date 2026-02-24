@@ -32,7 +32,6 @@ dependencyResolutionManagement {
 
 include(":composeApp")
 include(":corecommon")
-include(":corecommon:baseUnit")
 include(":corecommon:designsystem")
 include(":corecommon:libs")
 include(":features:auth")
