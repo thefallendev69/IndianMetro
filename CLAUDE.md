@@ -14,3 +14,6 @@ Autonomous workflow:
 - Run final build verification for impacted modules and `composeApp`; for broad refactors run full `./gradlew build`.
 - Run lint checks, fix issues if needed, and re-run checks.
 - Commit with a meaningful message and push.
+
+Reference:
+- `docs/UNIT_TEST_GUIDELINES.md`

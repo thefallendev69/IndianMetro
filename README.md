@@ -43,25 +43,25 @@ You can run iOS either from Xcode UI or terminal.
 
 #### Terminal flow
 
-1. Build for simulator
+1. Build for simulator (replace placeholders with your simulator details)
    ```bash
    xcodebuild \
      -project iosApp/iosApp.xcodeproj \
      -scheme iosApp \
      -configuration Debug \
-     -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.2' \
+     -destination 'platform=iOS Simulator,name=<SIMULATOR_NAME>,OS=<SIMULATOR_OS>' \
      build
    ```
 2. Boot simulator and open Simulator app
    ```bash
-   xcrun simctl list devices available
-   DEVICE_ID="$(xcrun simctl list devices available | grep 'iPhone 16 (' | head -n 1 | sed -E 's/.*\\(([A-F0-9-]+)\\).*/\\1/')"
+   DEVICE_ID="$(xcrun simctl list devices available | grep '<SIMULATOR_NAME> (' | head -n 1 | sed -E 's/.*\\(([A-F0-9-]+)\\).*/\\1/')"
    xcrun simctl boot "$DEVICE_ID" || true
    open -a Simulator
    ```
 3. Install and launch app
    ```bash
-   APP_PATH="$(find ~/Library/Developer/Xcode/DerivedData -path '*Build/Products/Debug-iphonesimulator/IndianMetro.app' | head -n 1)"
+   BUILD_DIR="$(xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -configuration Debug -showBuildSettings | awk -F ' = ' '/TARGET_BUILD_DIR/ {print $2; exit}')"
+   APP_PATH="$BUILD_DIR/IndianMetro.app"
    xcrun simctl install "$DEVICE_ID" "$APP_PATH"
    xcrun simctl launch "$DEVICE_ID" com.thefallendeveloper.indianmetro.IndianMetro
    ```
