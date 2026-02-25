@@ -24,6 +24,30 @@ def run_git_diff(base_ref: str) -> str:
     return result.stdout
 
 
+def detect_pr_base_ref(explicit_base_ref: str | None) -> str:
+    if explicit_base_ref:
+        return explicit_base_ref
+
+    github_base_ref = os.getenv("GITHUB_BASE_REF")
+    if github_base_ref:
+        return github_base_ref
+
+    try:
+        result = subprocess.run(
+            ["gh", "pr", "view", "--json", "baseRefName", "--jq", ".baseRefName"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        base_ref = result.stdout.strip()
+        if base_ref:
+            return base_ref
+    except Exception:
+        pass
+
+    return "main"
+
+
 def parse_changed_lines(diff_text: str):
     changed = defaultdict(dict)
     current_file = None
@@ -117,11 +141,37 @@ def is_non_code_line(line: str) -> bool:
     stripped = line.strip()
     if not stripped:
         return True
+    if stripped.startswith("import ") or stripped.startswith("package "):
+        return True
     if stripped in {"{", "}", "(", ")", "[", "]", ","}:
         return True
     if stripped.startswith(COMMENT_PREFIXES):
         return True
     return False
+
+
+def to_line_ranges(line_numbers):
+    if not line_numbers:
+        return []
+    sorted_numbers = sorted(line_numbers)
+    ranges = []
+    start = sorted_numbers[0]
+    end = sorted_numbers[0]
+
+    for line_number in sorted_numbers[1:]:
+        if line_number == end + 1:
+            end = line_number
+        else:
+            ranges.append((start, end))
+            start = line_number
+            end = line_number
+
+    ranges.append((start, end))
+    return ranges
+
+
+def class_name_from_path(file_path: str) -> str:
+    return Path(file_path).stem
 
 
 def file_to_coverage_key(path: str) -> str:
@@ -133,7 +183,7 @@ def file_to_coverage_key(path: str) -> str:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--base-ref", required=True)
+    parser.add_argument("--base-ref")
     parser.add_argument("--threshold", type=float, default=85.0)
     parser.add_argument("--report", action="append", default=[])
     parser.add_argument("--report-glob", action="append", default=[])
@@ -148,12 +198,15 @@ def main():
         print("No coverage report files found.")
         sys.exit(1)
 
-    diff_text = run_git_diff(args.base_ref)
+    base_ref = detect_pr_base_ref(args.base_ref)
+    print(f"Using PR base ref: {base_ref}")
+    diff_text = run_git_diff(base_ref)
     changed_lines = parse_changed_lines(diff_text)
     coverage = parse_coverage_reports(report_paths)
 
     total = 0
     covered = 0
+    file_stats = defaultdict(lambda: {"total": 0, "covered": 0, "uncovered": []})
 
     for file_path, lines in changed_lines.items():
         if not file_path.endswith(".kt"):
@@ -171,8 +224,12 @@ def main():
                 continue
 
             total += 1
+            file_stats[file_path]["total"] += 1
             if coverage_for_file.get(line_number, False):
                 covered += 1
+                file_stats[file_path]["covered"] += 1
+            else:
+                file_stats[file_path]["uncovered"].append((line_number, line_text.strip()))
 
     if total == 0:
         print("No eligible changed Kotlin code lines found for coverage gate. Passing.")
@@ -182,6 +239,20 @@ def main():
     print(
         f"Changed-lines coverage: {percent:.2f}% (covered {covered} / total {total}), threshold {args.threshold:.2f}%"
     )
+
+    print("Coverage by file:")
+    for file_path in sorted(file_stats.keys()):
+        stats = file_stats[file_path]
+        file_percent = (stats["covered"] / stats["total"] * 100) if stats["total"] else 0.0
+        print(
+            f"  - {file_path}: {file_percent:.2f}% (covered {stats['covered']} / total {stats['total']})"
+        )
+        if stats["uncovered"]:
+            line_ranges = to_line_ranges([line_number for line_number, _ in stats["uncovered"]])
+            print("    Uncovered ranges:")
+            class_name = class_name_from_path(file_path)
+            for start, end in line_ranges:
+                print(f"      {class_name} ({start} - {end})")
 
     if percent < args.threshold:
         print("Coverage gate failed.")
