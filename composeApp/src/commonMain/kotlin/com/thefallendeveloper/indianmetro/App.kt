@@ -28,11 +28,11 @@ import com.thefallendeveloper.indianmetro.designsystem.components.GradientPrimar
 import com.thefallendeveloper.indianmetro.designsystem.components.SecondaryButton
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroThemeTokens
-import com.thefallendeveloper.indianmetro.features.auth.AuthRoute
-import com.thefallendeveloper.indianmetro.features.auth.authModule
-import com.thefallendeveloper.indianmetro.features.onboarding.OnboardingScreen
-import com.thefallendeveloper.indianmetro.features.onboarding.OnboardingUiState
-import com.thefallendeveloper.indianmetro.features.onboarding.onboardingModule
+import com.thefallendeveloper.indianmetro.features.auth.di.authModule
+import com.thefallendeveloper.indianmetro.features.auth.ui.AuthRoute
+import com.thefallendeveloper.indianmetro.features.onboarding.di.onboardingModule
+import com.thefallendeveloper.indianmetro.features.onboarding.ui.OnboardingScreen
+import com.thefallendeveloper.indianmetro.features.onboarding.ui.OnboardingUiState
 import indianmetro.composeapp.generated.resources.Res
 import indianmetro.composeapp.generated.resources.app_account_created
 import indianmetro.composeapp.generated.resources.app_continue
