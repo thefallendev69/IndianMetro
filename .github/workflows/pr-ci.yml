@@ -72,7 +72,14 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Run Unit Tests
-        run: ./gradlew testDebugUnitTest --stacktrace
+        run: >
+          ./gradlew
+          :features:auth:testDebugUnitTest
+          :features:onboarding:testDebugUnitTest
+          --parallel
+          --build-cache
+          --configuration-cache
+          --stacktrace
 
   lint:
     name: Lint Checks
@@ -91,4 +98,21 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Run Linting
-        run: ./gradlew ktlintCheck detekt --stacktrace
+        run: >
+          ./gradlew
+          :composeApp:ktlintCheck
+          :corecommon:baseTest:ktlintCheck
+          :corecommon:designsystem:ktlintCheck
+          :corecommon:libs:ktlintCheck
+          :features:auth:ktlintCheck
+          :features:onboarding:ktlintCheck
+          :composeApp:detekt
+          :corecommon:baseTest:detekt
+          :corecommon:designsystem:detekt
+          :corecommon:libs:detekt
+          :features:auth:detekt
+          :features:onboarding:detekt
+          --parallel
+          --build-cache
+          --configuration-cache
+          --stacktrace
