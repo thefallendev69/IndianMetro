@@ -37,6 +37,17 @@
 ## Notes
 - Keep this file updated as decisions evolve.
 
+## Unit Test Coverage
+- Coverage is generated with Kover.
+- For a feature module (example `features/auth`), run:
+  - `./gradlew :features:auth:testDebugUnitTest :features:auth:koverHtmlReportDebug :features:auth:koverXmlReportDebug`
+- Useful alternatives:
+  - `./gradlew :features:auth:koverLogDebug` (prints coverage in console)
+  - `./gradlew :features:auth:koverVerifyDebug` (enforces configured coverage rules)
+- Report outputs:
+  - HTML: `features/auth/build/reports/kover/htmlDebug/index.html`
+  - XML: `features/auth/build/reports/kover/reportDebug.xml`
+
 ## Autonomous Workflow
 - Implement the required task end-to-end.
 - Verify the implemented task works.
