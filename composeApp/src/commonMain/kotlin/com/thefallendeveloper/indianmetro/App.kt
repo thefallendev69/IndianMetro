@@ -29,7 +29,7 @@ import com.thefallendeveloper.indianmetro.designsystem.components.SecondaryButto
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroThemeTokens
 import com.thefallendeveloper.indianmetro.features.auth.di.authModule
-import com.thefallendeveloper.indianmetro.features.auth.ui.AuthRoute
+import com.thefallendeveloper.indianmetro.features.auth.ui.AuthScreen
 import com.thefallendeveloper.indianmetro.features.onboarding.di.onboardingModule
 import com.thefallendeveloper.indianmetro.features.onboarding.ui.OnboardingScreen
 import com.thefallendeveloper.indianmetro.features.onboarding.ui.OnboardingUiState
@@ -62,7 +62,7 @@ fun App() {
             startDestination = AppRoutes.Auth.route,
         ) {
             composable(AppRoutes.Auth.route) {
-                AuthRoute()
+                AuthScreen()
             }
 
             composable(AppRoutes.AppOnboarding.route) {

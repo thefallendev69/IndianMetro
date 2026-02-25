@@ -13,14 +13,13 @@ import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.routes.deco
 import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigationRoutes
 import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigator
 import com.thefallendeveloper.indianmetro.features.auth.navigation.OtpEntryArgs
-import com.thefallendeveloper.indianmetro.features.auth.viewmodel.OtpEntryViewModel
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 
 @Composable
-fun AuthRoute(
+fun AuthScreen(
     featureNavigator: FeatureNavigator<AuthNavigationRoutes> = koinInject(qualifier = named<AuthNavigator>()),
 ) {
     val navController = rememberNavController()
