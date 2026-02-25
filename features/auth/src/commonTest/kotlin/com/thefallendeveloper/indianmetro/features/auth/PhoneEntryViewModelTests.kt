@@ -10,6 +10,7 @@ import com.thefallendeveloper.indianmetro.corecommon.basetest.ManagedTestLifecyc
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.FeatureNavigator
 import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigationRoutes
 import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigator
+import com.thefallendeveloper.indianmetro.features.auth.viewmodel.PhoneEntryViewModel
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
