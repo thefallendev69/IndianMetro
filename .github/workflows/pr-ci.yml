@@ -14,9 +14,71 @@ permissions:
   contents: read
 
 jobs:
-  compile-android:
-    name: Compile Android
+  compile:
+    name: ${{ matrix.job_name }}
+    runs-on: ${{ matrix.runs_on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - job_name: Compile Android
+            runs_on: ubuntu-latest
+            command: ./gradlew :composeApp:assembleDebug --stacktrace
+          - job_name: Compile iOS
+            runs_on: macos-latest
+            command: ./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64 --stacktrace
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run Compile Command
+        run: ${{ matrix.command }}
+
+  verify:
+    name: ${{ matrix.job_name }}
     runs-on: ubuntu-latest
+    needs: compile
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - job_name: Unit Tests
+            command: >
+              ./gradlew
+              :features:auth:testDebugUnitTest
+              :features:onboarding:testDebugUnitTest
+              --parallel
+              --build-cache
+              --configuration-cache
+              --stacktrace
+          - job_name: Lint Checks
+            command: >
+              ./gradlew
+              :composeApp:ktlintCheck
+              :corecommon:baseTest:ktlintCheck
+              :corecommon:designsystem:ktlintCheck
+              :corecommon:libs:ktlintCheck
+              :features:auth:ktlintCheck
+              :features:onboarding:ktlintCheck
+              :composeApp:detekt
+              :corecommon:baseTest:detekt
+              :corecommon:designsystem:detekt
+              :corecommon:libs:detekt
+              :features:auth:detekt
+              :features:onboarding:detekt
+              --parallel
+              --build-cache
+              --configuration-cache
+              --stacktrace
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,89 +92,5 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Compile Android
-        run: ./gradlew :composeApp:assembleDebug --stacktrace
-
-  compile-ios:
-    name: Compile iOS
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Compile iOS
-        run: ./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64 --stacktrace
-
-  unit-tests:
-    name: Unit Tests
-    runs-on: ubuntu-latest
-    needs:
-      - compile-android
-      - compile-ios
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Run Unit Tests
-        run: >
-          ./gradlew
-          :features:auth:testDebugUnitTest
-          :features:onboarding:testDebugUnitTest
-          --parallel
-          --build-cache
-          --configuration-cache
-          --stacktrace
-
-  lint:
-    name: Lint Checks
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Run Linting
-        run: >
-          ./gradlew
-          :composeApp:ktlintCheck
-          :corecommon:baseTest:ktlintCheck
-          :corecommon:designsystem:ktlintCheck
-          :corecommon:libs:ktlintCheck
-          :features:auth:ktlintCheck
-          :features:onboarding:ktlintCheck
-          :composeApp:detekt
-          :corecommon:baseTest:detekt
-          :corecommon:designsystem:detekt
-          :corecommon:libs:detekt
-          :features:auth:detekt
-          :features:onboarding:detekt
-          --parallel
-          --build-cache
-          --configuration-cache
-          --stacktrace
+      - name: Run Verify Command
+        run: ${{ matrix.command }}
