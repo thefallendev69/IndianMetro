@@ -55,24 +55,12 @@ jobs:
             command: >
               ./gradlew
               testDebugUnitTest
-              --parallel
-              --build-cache
-              --configuration-cache
-              --stacktrace
-          - job_name: Coverage Gate
-            command: >
-              ./gradlew
-              testDebugUnitTest
               koverXmlReportDebug
               --parallel
               --build-cache
               --configuration-cache
               --stacktrace
-              &&
-              python3 scripts/ci/changed_lines_coverage.py
-              --base-ref ${{ github.base_ref }}
-              --threshold 85
-              --report-glob "**/build/reports/kover/reportDebug.xml"
+            run_coverage_gate: true
           - job_name: Lint Checks
             command: >
               ./gradlew
@@ -82,6 +70,7 @@ jobs:
               --build-cache
               --configuration-cache
               --stacktrace
+            run_coverage_gate: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -99,3 +88,11 @@ jobs:
 
       - name: Run Verify Command
         run: ${{ matrix.command }}
+
+      - name: Run Coverage Gate
+        if: ${{ matrix.run_coverage_gate }}
+        run: >
+          python3 scripts/ci/changed_lines_coverage.py
+          --base-ref ${{ github.base_ref }}
+          --threshold 85
+          --report-glob "**/build/reports/kover/reportDebug.xml"
