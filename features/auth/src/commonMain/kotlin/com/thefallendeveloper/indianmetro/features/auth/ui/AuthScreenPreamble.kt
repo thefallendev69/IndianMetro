@@ -1,4 +1,4 @@
-package com.thefallendeveloper.indianmetro.features.auth
+package com.thefallendeveloper.indianmetro.features.auth.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

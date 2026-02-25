@@ -1,4 +1,4 @@
-package com.thefallendeveloper.indianmetro.features.onboarding
+package com.thefallendeveloper.indianmetro.features.onboarding.navigation
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

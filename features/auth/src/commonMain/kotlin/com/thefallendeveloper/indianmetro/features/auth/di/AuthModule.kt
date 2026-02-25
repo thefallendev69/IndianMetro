@@ -1,10 +1,12 @@
-package com.thefallendeveloper.indianmetro.features.auth
+package com.thefallendeveloper.indianmetro.features.auth.di
 
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.AppNavigator
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.featureNavigatorModule
 import com.thefallendeveloper.indianmetro.corecommon.libs.navigation.routes.AppRoutes
 import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigationRoutes
 import com.thefallendeveloper.indianmetro.features.auth.navigation.AuthNavigator
+import com.thefallendeveloper.indianmetro.features.auth.viewmodel.OtpEntryViewModel
+import com.thefallendeveloper.indianmetro.features.auth.viewmodel.PhoneEntryViewModel
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module

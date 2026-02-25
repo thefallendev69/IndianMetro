@@ -1,4 +1,4 @@
-package com.thefallendeveloper.indianmetro.features.auth
+package com.thefallendeveloper.indianmetro.features.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

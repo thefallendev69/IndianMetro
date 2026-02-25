@@ -1,4 +1,4 @@
-package com.thefallendeveloper.indianmetro.features.auth
+package com.thefallendeveloper.indianmetro.features.auth.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +27,7 @@ import com.thefallendeveloper.indianmetro.designsystem.components.GradientPrimar
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroThemeTokens
 import com.thefallendeveloper.indianmetro.designsystem.tokens.ColorTokens
+import com.thefallendeveloper.indianmetro.features.auth.viewmodel.OtpEntryViewModel
 import indianmetro.features.auth.generated.resources.Res
 import indianmetro.features.auth.generated.resources.auth_otp_code_label
 import indianmetro.features.auth.generated.resources.auth_otp_placeholder
@@ -37,7 +38,7 @@ import indianmetro.features.auth.generated.resources.auth_verify_otp_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AuthOtpScreen(viewModel: OtpEntryViewModel,) {
+fun AuthOtpScreen(viewModel: OtpEntryViewModel) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     IndianMetroTheme {

@@ -23,10 +23,10 @@ jobs:
         include:
           - job_name: Compile Android
             runs_on: ubuntu-latest
-            command: ./gradlew :composeApp:assembleDebug --stacktrace
+            command: ./gradlew assembleDebug --stacktrace
           - job_name: Compile iOS
             runs_on: macos-latest
-            command: ./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64 --stacktrace
+            command: ./gradlew linkDebugFrameworkIosSimulatorArm64 --stacktrace
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -54,12 +54,13 @@ jobs:
           - job_name: Unit Tests
             command: >
               ./gradlew
-              :features:auth:testDebugUnitTest
-              :features:onboarding:testDebugUnitTest
+              testDebugUnitTest
+              koverXmlReportDebug
               --parallel
               --build-cache
               --configuration-cache
               --stacktrace
+            run_coverage_gate: true
           - job_name: Lint Checks
             command: >
               ./gradlew
@@ -69,9 +70,12 @@ jobs:
               --build-cache
               --configuration-cache
               --stacktrace
+            run_coverage_gate: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Java 17
         uses: actions/setup-java@v4
@@ -84,3 +88,11 @@ jobs:
 
       - name: Run Verify Command
         run: ${{ matrix.command }}
+
+      - name: Run Coverage Gate
+        if: ${{ matrix.run_coverage_gate }}
+        run: >
+          python3 scripts/ci/changed_lines_coverage.py
+          --base-ref ${{ github.base_ref }}
+          --threshold 85
+          --report-glob "**/build/reports/kover/reportDebug.xml"

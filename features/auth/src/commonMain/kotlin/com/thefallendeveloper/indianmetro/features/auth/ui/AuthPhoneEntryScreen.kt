@@ -1,4 +1,4 @@
-package com.thefallendeveloper.indianmetro.features.auth
+package com.thefallendeveloper.indianmetro.features.auth.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,6 +16,7 @@ import com.thefallendeveloper.indianmetro.designsystem.components.GradientPrimar
 import com.thefallendeveloper.indianmetro.designsystem.components.MetroLabeledPhoneInputField
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroTheme
 import com.thefallendeveloper.indianmetro.designsystem.theme.IndianMetroThemeTokens
+import com.thefallendeveloper.indianmetro.features.auth.viewmodel.PhoneEntryViewModel
 import indianmetro.features.auth.generated.resources.Res
 import indianmetro.features.auth.generated.resources.auth_mobile_number_label
 import indianmetro.features.auth.generated.resources.auth_phone_placeholder

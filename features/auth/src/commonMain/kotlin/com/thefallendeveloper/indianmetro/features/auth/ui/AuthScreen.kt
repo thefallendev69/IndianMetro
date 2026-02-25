@@ -1,4 +1,4 @@
-package com.thefallendeveloper.indianmetro.features.auth
+package com.thefallendeveloper.indianmetro.features.auth.ui
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
@@ -19,7 +19,7 @@ import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 
 @Composable
-fun AuthRoute(
+fun AuthScreen(
     featureNavigator: FeatureNavigator<AuthNavigationRoutes> = koinInject(qualifier = named<AuthNavigator>()),
 ) {
     val navController = rememberNavController()
