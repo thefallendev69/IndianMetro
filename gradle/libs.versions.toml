@@ -62,5 +62,6 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 indianmetroLintConventions = { id = "com.thefallendeveloper.indianmetro.lint-conventions" }
 indianmetroLintSuite = { id = "com.thefallendeveloper.indianmetro.lint-suite" }
 indianmetroJvmConfigConventions = { id = "com.thefallendeveloper.indianmetro.jvm-config-conventions" }
+indianmetroKoverConfigConventions = { id = "com.thefallendeveloper.indianmetro.kover-config-conventions" }
 mokkery = { id = "dev.mokkery", version.ref = "mokkery" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }

@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kover) apply false
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.indianmetroLintSuite)
+    alias(libs.plugins.indianmetroKoverConfigConventions)
 }
 
 apply(from = "$rootDir/gradle/ij-kotlin-mpp-test-logger-workaround.gradle")

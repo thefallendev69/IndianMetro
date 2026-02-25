@@ -106,35 +106,15 @@ def parse_coverage_reports(report_paths):
     return coverage_by_key
 
 
-def is_excluded_file(path: str) -> bool:
-    lower = path.lower()
-    filename = os.path.basename(lower)
-
-    if "/build/" in lower or "/generated/" in lower or "/gen/" in lower:
-        return True
-    if "/di/" in lower:
-        return True
-    if filename.endswith("module.kt"):
-        return True
-    if "generated" in filename:
-        return True
-    return False
+def is_excluded_by_path(file_path: str, excluded_paths: list[str]) -> bool:
+    normalized_path = file_path.replace("\\", "/")
+    return any(pattern in normalized_path for pattern in excluded_paths)
 
 
-def is_unsupported_source_set(path: str) -> bool:
-    lower = path.lower()
-    unsupported_markers = (
-        "/src/iosmain/",
-        "/src/iosarm64main/",
-        "/src/iossimulatorarm64main/",
-        "/src/applemain/",
-        "/src/nativemain/",
-        "/src/macosmain/",
-        "/src/tvosmain/",
-        "/src/watchosmain/",
-        "/src/wasmmain/",
-    )
-    return any(marker in lower for marker in unsupported_markers)
+def is_excluded_by_package(coverage_key: str, excluded_packages: list[str]) -> bool:
+    package_part = coverage_key.rsplit("/", 1)[0] if "/" in coverage_key else ""
+    package_name = package_part.replace("/", ".")
+    return any(package_name.startswith(prefix) for prefix in excluded_packages)
 
 
 def is_non_code_line(line: str) -> bool:
@@ -187,6 +167,8 @@ def main():
     parser.add_argument("--threshold", type=float, default=85.0)
     parser.add_argument("--report", action="append", default=[])
     parser.add_argument("--report-glob", action="append", default=[])
+    parser.add_argument("--exclude-package", action="append", default=[])
+    parser.add_argument("--exclude-path", action="append", default=[])
     args = parser.parse_args()
 
     report_candidates = list(args.report)
@@ -207,17 +189,22 @@ def main():
     total = 0
     covered = 0
     file_stats = defaultdict(lambda: {"total": 0, "covered": 0, "uncovered": []})
+    skipped_not_in_report = []
 
     for file_path, lines in changed_lines.items():
         if not file_path.endswith(".kt"):
             continue
-        if is_excluded_file(file_path):
-            continue
-        if is_unsupported_source_set(file_path):
+        if is_excluded_by_path(file_path, args.exclude_path):
             continue
 
         key = file_to_coverage_key(file_path)
-        coverage_for_file = coverage.get(key, {})
+        if is_excluded_by_package(key, args.exclude_package):
+            continue
+
+        coverage_for_file = coverage.get(key)
+        if coverage_for_file is None:
+            skipped_not_in_report.append(file_path)
+            continue
 
         for line_number, line_text in lines.items():
             if is_non_code_line(line_text):
@@ -253,6 +240,11 @@ def main():
             class_name = class_name_from_path(file_path)
             for start, end in line_ranges:
                 print(f"      {class_name} ({start} - {end})")
+
+    if skipped_not_in_report:
+        print("Skipped files (not present in Kover report):")
+        for file_path in sorted(set(skipped_not_in_report)):
+            print(f"  - {file_path}")
 
     if percent < args.threshold:
         print("Coverage gate failed.")
