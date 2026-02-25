@@ -70,9 +70,9 @@ jobs:
               --stacktrace
               &&
               python3 scripts/ci/changed_lines_coverage.py
-              --base-ref \"${{ github.base_ref }}\"
+              --base-ref ${{ github.base_ref }}
               --threshold 85
-              --report-glob \"**/build/reports/kover/reportDebug.xml\"
+              --report-glob "**/build/reports/kover/reportDebug.xml"
           - job_name: Lint Checks
             command: >
               ./gradlew

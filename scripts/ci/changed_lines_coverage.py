@@ -97,6 +97,22 @@ def is_excluded_file(path: str) -> bool:
     return False
 
 
+def is_unsupported_source_set(path: str) -> bool:
+    lower = path.lower()
+    unsupported_markers = (
+        "/src/iosmain/",
+        "/src/iosarm64main/",
+        "/src/iossimulatorarm64main/",
+        "/src/applemain/",
+        "/src/nativemain/",
+        "/src/macosmain/",
+        "/src/tvosmain/",
+        "/src/watchosmain/",
+        "/src/wasmmain/",
+    )
+    return any(marker in lower for marker in unsupported_markers)
+
+
 def is_non_code_line(line: str) -> bool:
     stripped = line.strip()
     if not stripped:
@@ -143,6 +159,8 @@ def main():
         if not file_path.endswith(".kt"):
             continue
         if is_excluded_file(file_path):
+            continue
+        if is_unsupported_source_set(file_path):
             continue
 
         key = file_to_coverage_key(file_path)
