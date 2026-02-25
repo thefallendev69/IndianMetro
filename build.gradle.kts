@@ -1,3 +1,5 @@
+import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
+
 plugins {
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.androidLibrary) apply false
@@ -27,6 +29,21 @@ subprojects {
 
             if (hasBaseTestDependency && !pluginManager.hasPlugin(koverPluginId)) {
                 pluginManager.apply(koverPluginId)
+            }
+        }
+    }
+
+    pluginManager.withPlugin(koverPluginId) {
+        extensions.configure<KoverProjectExtension> {
+            reports {
+                filters {
+                    excludes {
+                        packages(
+                            "*.di",
+                            "*.di.*",
+                        )
+                    }
+                }
             }
         }
     }

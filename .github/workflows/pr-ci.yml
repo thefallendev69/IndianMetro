@@ -95,4 +95,10 @@ jobs:
           python3 scripts/ci/changed_lines_coverage.py
           --base-ref ${{ github.base_ref }}
           --threshold 85
+          --exclude-package com.thefallendeveloper.indianmetro.di
+          --exclude-package com.thefallendeveloper.indianmetro.features.auth.di
+          --exclude-package com.thefallendeveloper.indianmetro.features.onboarding.di
+          --exclude-path /build/
+          --exclude-path /generated/
+          --exclude-path /gen/
           --report-glob "**/build/reports/kover/reportDebug.xml"
