@@ -63,18 +63,8 @@ jobs:
           - job_name: Lint Checks
             command: >
               ./gradlew
-              :composeApp:ktlintCheck
-              :corecommon:baseTest:ktlintCheck
-              :corecommon:designsystem:ktlintCheck
-              :corecommon:libs:ktlintCheck
-              :features:auth:ktlintCheck
-              :features:onboarding:ktlintCheck
-              :composeApp:detekt
-              :corecommon:baseTest:detekt
-              :corecommon:designsystem:detekt
-              :corecommon:libs:detekt
-              :features:auth:detekt
-              :features:onboarding:detekt
+              ktlintCheck
+              detekt
               --parallel
               --build-cache
               --configuration-cache
