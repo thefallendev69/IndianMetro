@@ -60,7 +60,6 @@ jobs:
               --build-cache
               --configuration-cache
               --stacktrace
-            run_coverage_gate: true
           - job_name: Lint Checks
             command: >
               ./gradlew
@@ -70,7 +69,6 @@ jobs:
               --build-cache
               --configuration-cache
               --stacktrace
-            run_coverage_gate: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -89,10 +87,33 @@ jobs:
       - name: Run Verify Command
         run: ${{ matrix.command }}
 
+      - name: Upload Kover Report
+        if: ${{ matrix.job_name == 'Unit Tests' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: kover-report
+          path: "**/build/reports/kover/reportDebug.xml"
+          if-no-files-found: error
+
+  coverage_gate:
+    name: Coverage Gate
+    runs-on: ubuntu-latest
+    needs: verify
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download Kover Report
+        uses: actions/download-artifact@v4
+        with:
+          name: kover-report
+          path: kover-report
+
       - name: Run Coverage Gate
-        if: ${{ matrix.run_coverage_gate }}
         run: >
           python3 scripts/ci/changed_lines_coverage.py
           --base-ref ${{ github.base_ref }}
           --threshold 85
-          --report-glob "**/build/reports/kover/reportDebug.xml"
+          --report-glob "kover-report/**/*.xml"
